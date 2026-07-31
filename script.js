@@ -19,7 +19,7 @@ const TOOLS = [
   },
   {
     name: 'BAMS Planner',
-    description: 'Track progress through the UPOU BAMS degree plan.',
+    description: 'WIP. Track progress through the UPOU BAMS program.',
     path: 'bams-planner/',
     icon: '🎓',
   },
