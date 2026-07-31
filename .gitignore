@@ -1,1 +1,6 @@
 .DS_Store
+
+# These are their own independent git repos, not part of this one.
+/study-tracker/
+/reading-notebook/
+/bams-planner/
