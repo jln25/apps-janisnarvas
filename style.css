@@ -123,6 +123,10 @@ main {
   color: var(--color-text-muted);
 }
 
+.site-footer p { margin: 0 0 4px; }
+.site-footer p:last-child { margin-bottom: 0; }
+.site-footer a { color: var(--color-primary); }
+
 @media (max-width: 500px) {
   .intro h1 { font-size: 1.5rem; }
 }
