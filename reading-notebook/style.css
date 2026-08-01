@@ -1,0 +1,523 @@
+/* ==========================================================================
+   Reading Notebook — styles
+   Text-focused, comfortable reading width, lightweight tag pills.
+   Palette: indigo (primary), teal (accent), slate neutrals.
+   ========================================================================== */
+
+:root {
+  --color-primary: #1e73be;
+  --color-primary-hover: #185f9c;
+  --color-accent: #0d9488;
+
+  --color-bg: #f9f9f5;
+  --color-surface: #ffffff;
+  --color-border: #e5e5e0;
+  --color-text: #1c1c1c;
+  --color-text-muted: #4d4d4d;
+
+  --color-danger: #dc2626;
+  --color-danger-border: #fecaca;
+  --color-danger-hover-bg: #fef2f2;
+  --color-on-primary: #ffffff;
+  --color-on-accent: #ffffff;
+  --color-tag-bg: #f0fdfa;
+  --color-tag-border: #ccfbf1;
+
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+
+  --reading-width: 680px;
+
+  /* Footer bar: a dark block in both themes, so it reads as a base rail. */
+  --color-bar-bg: #1c1c1c;
+  --color-bar-text: #f2f2ec;
+}
+
+/* ---------- Dark theme ----------
+   theme.js sets data-theme on <html>, defaulting to the OS preference.
+   Kept slightly softer than pure black: this is a reading surface used for
+   long stretches, so the contrast is high but not harsh. */
+:root[data-theme="dark"] {
+  --color-primary: #58a6f0;
+  --color-primary-hover: #7bb8f5;
+  --color-accent: #2dd4bf;
+
+  --color-bg: #1a1a17;
+  --color-surface: #232320;
+  --color-border: #35352f;
+  --color-text: #ece9e2;
+  --color-text-muted: #a5a59c;
+
+  --color-danger: #f87171;
+  --color-danger-border: #5b2626;
+  --color-danger-hover-bg: #3a1c1c;
+  --color-on-primary: #10233a;
+  --color-on-accent: #06231f;
+  --color-tag-bg: #14332e;
+  --color-tag-border: #1d4a43;
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --color-bar-bg: #100f0e;
+  --color-bar-text: #e6e3dc;
+}
+
+* { box-sizing: border-box; }
+
+/* The `hidden` attribute must always win over any rule that sets `display`. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* ---------- App shell / layout ---------- */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.app-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.home-link {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  margin-bottom: 2px;
+}
+.home-link:hover { color: var(--color-primary); }
+
+.sidebar-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.theme-toggle {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--color-primary); border-color: var(--color-primary); }
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 28px 24px 60px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-block { width: 100%; }
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn-primary:hover { background: var(--color-primary-hover); }
+
+.btn-secondary {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.btn-secondary:hover { border-color: var(--color-primary); }
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+  text-align: left;
+}
+.btn-ghost:hover { background: var(--color-bg); }
+
+.btn-danger {
+  background: transparent;
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+.btn-danger:hover { background: var(--color-danger-hover-bg); }
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ---------- Sidebar sections ---------- */
+
+#search-input {
+  font-family: inherit;
+  font-size: 0.88rem;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+.sidebar-section h2 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.sidebar-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-footer hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 4px 0;
+  width: 100%;
+}
+
+/* ---------- Tag pills ---------- */
+
+.tag-pill {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: var(--color-tag-bg);
+  border: 1px solid var(--color-tag-border);
+  border-radius: 999px;
+  padding: 2px 9px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.tag-pill:hover { border-color: var(--color-accent); }
+
+.tag-pill.active {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+.tag-pill-count {
+  opacity: 0.7;
+  margin-left: 2px;
+}
+
+/* ---------- Active filter banner ---------- */
+
+.active-filter-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 14px;
+}
+
+/* ---------- Note list ---------- */
+
+.note-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: var(--reading-width);
+}
+
+.note-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.note-card:hover { border-color: var(--color-primary); }
+
+.note-card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin: 0 0 4px;
+}
+
+.note-card-snippet {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.note-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 60px 0;
+}
+
+/* ---------- Detail view ---------- */
+
+.detail-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  max-width: var(--reading-width);
+}
+
+.detail-toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.note-detail {
+  max-width: var(--reading-width);
+}
+
+.note-detail h1 {
+  font-size: 1.5rem;
+  margin: 0 0 6px;
+}
+
+.note-detail-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin-bottom: 10px;
+}
+
+.note-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+.note-detail-section {
+  margin-bottom: 26px;
+}
+
+.note-detail-section h2 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-accent);
+  margin: 0 0 8px;
+}
+
+.note-detail-section .rich-content {
+  font-size: 0.98rem;
+}
+
+.rich-content blockquote {
+  border-left: 3px solid var(--color-border);
+  margin: 10px 0;
+  padding: 4px 14px;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.rich-content ul, .rich-content ol {
+  padding-left: 22px;
+}
+
+/* ---------- Form view ---------- */
+
+#note-form {
+  max-width: var(--reading-width);
+}
+
+.field-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin: 16px 0 5px;
+}
+
+#note-form input[type="text"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.rich-field { margin-top: 10px; }
+
+.rich-field-toolbar {
+  display: flex;
+  gap: 3px;
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 5px;
+  background: var(--color-bg);
+}
+
+.rich-field-toolbar button {
+  width: 30px;
+  height: 28px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--color-text);
+}
+
+.rich-field-toolbar button:hover {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.rich-field-editable {
+  min-height: 120px;
+  /* Long-form fields are user-resizable: these hold whole sections of
+     reading notes, so a fixed box gets cramped fast. Requires a non-visible
+     overflow for the drag handle to appear. */
+  resize: vertical;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 0 0 8px 8px;
+  padding: 12px 14px;
+  background: var(--color-surface);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.rich-field-editable:focus { outline: 2px solid var(--color-primary); outline-offset: -1px; }
+
+.rich-field-editable p { margin: 0 0 10px; }
+.rich-field-editable blockquote {
+  border-left: 3px solid var(--color-border);
+  margin: 10px 0;
+  padding: 4px 14px;
+  color: var(--color-text-muted);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* ---------- View visibility ---------- */
+
+.view[hidden] { display: none; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 760px) {
+  .app-shell { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .main-content { padding: 20px 16px 48px; }
+}
+
+/* ---------- Shared version / copyright bar ---------- */
+
+.site-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 14px 24px;
+  background: var(--color-bar-bg);
+  color: var(--color-bar-text);
+  font-size: 0.78rem;
+}
+
+.site-bar a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.site-bar a:hover { opacity: 0.75; }
+
+.site-bar-version {
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}

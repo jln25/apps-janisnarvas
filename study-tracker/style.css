@@ -1,0 +1,638 @@
+/* ==========================================================================
+   Study Tracker — styles
+   Palette: blue (primary), slate neutrals.
+   Status colors run roughly cool-to-warm-to-done: not-started (slate),
+   planning (violet), writing (blue), proofread (cyan), citations (indigo),
+   ongoing (amber), done (teal), submitted (emerald).
+   ========================================================================== */
+
+:root {
+  --color-primary: #1e73be;
+  --color-primary-hover: #185f9c;
+  --color-accent: #0d9488;
+
+  --color-not-started: #64748b;
+  --color-not-started-bg: #f1f5f9;
+  --color-planning: #7c3aed;
+  --color-planning-bg: #ede9fe;
+  --color-writing: #1e73be;
+  --color-writing-bg: #dbeafe;
+  --color-proofread: #0891b2;
+  --color-proofread-bg: #cffafe;
+  --color-citations: #4f46e5;
+  --color-citations-bg: #e0e7ff;
+  --color-ongoing: #d97706;
+  --color-ongoing-bg: #fef3c7;
+  --color-done: #0d9488;
+  --color-done-bg: #ccfbf1;
+  --color-submitted: #059669;
+  --color-submitted-bg: #d1fae5;
+
+  --color-priority-high: #dc2626;
+  --color-priority-high-bg: #fee2e2;
+  --color-priority-medium: #d97706;
+  --color-priority-medium-bg: #fef3c7;
+  --color-priority-low: #64748b;
+  --color-priority-low-bg: #f1f5f9;
+
+  --color-bg: #f9f9f5;
+  --color-surface: #ffffff;
+  --color-border: #e5e5e0;
+  --color-text: #1c1c1c;
+  --color-text-muted: #4d4d4d;
+
+  --color-danger: #dc2626;
+  --color-danger-border: #fecaca;
+  --color-danger-hover-bg: #fef2f2;
+  --color-on-primary: #ffffff;
+  --color-overlay: rgba(15, 23, 42, 0.45);
+
+  --radius: 10px;
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.12);
+
+  /* Footer bar: a dark block in both themes, so it reads as a base rail. */
+  --color-bar-bg: #1c1c1c;
+  --color-bar-text: #f2f2ec;
+}
+
+/* ---------- Dark theme ----------
+   theme.js sets data-theme on <html>, defaulting to the OS preference.
+   Status hues are brightened for legibility on dark, and their badge tints
+   become deep desaturated versions rather than the light pastels, which
+   would otherwise turn muddy. */
+:root[data-theme="dark"] {
+  --color-primary: #58a6f0;
+  --color-primary-hover: #7bb8f5;
+  --color-accent: #2dd4bf;
+
+  --color-not-started: #94a3b8;
+  --color-not-started-bg: #2a2f36;
+  --color-planning: #a78bfa;
+  --color-planning-bg: #2e2544;
+  --color-writing: #60a5fa;
+  --color-writing-bg: #1b2f47;
+  --color-proofread: #22d3ee;
+  --color-proofread-bg: #12333c;
+  --color-citations: #818cf8;
+  --color-citations-bg: #262551;
+  --color-ongoing: #fbbf24;
+  --color-ongoing-bg: #3d2f14;
+  --color-done: #2dd4bf;
+  --color-done-bg: #12332f;
+  --color-submitted: #34d399;
+  --color-submitted-bg: #123328;
+
+  --color-priority-high: #f87171;
+  --color-priority-high-bg: #3d1d1d;
+  --color-priority-medium: #fbbf24;
+  --color-priority-medium-bg: #3d2f14;
+  --color-priority-low: #94a3b8;
+  --color-priority-low-bg: #2a2f36;
+
+  --color-bg: #1a1a17;
+  --color-surface: #232320;
+  --color-border: #35352f;
+  --color-text: #f2f2ec;
+  --color-text-muted: #a5a59c;
+
+  --color-danger: #f87171;
+  --color-danger-border: #5b2626;
+  --color-danger-hover-bg: #3a1c1c;
+  --color-on-primary: #10233a;
+  --color-overlay: rgba(0, 0, 0, 0.65);
+
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
+  --color-bar-bg: #100f0e;
+  --color-bar-text: #e6e3dc;
+}
+
+* { box-sizing: border-box; }
+
+/* The `hidden` attribute must always win. Any rule setting `display` on an
+   element (grid, flex…) otherwise silently overrides it, which has already
+   caused several "why is this still visible / unclickable" bugs here. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* ---------- Header ---------- */
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.app-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  margin-right: auto;
+}
+
+.home-link {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.home-link:hover { color: var(--color-primary); }
+
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--color-primary); border-color: var(--color-primary); }
+
+.view-toggle {
+  display: inline-flex;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 3px;
+}
+
+.toggle-btn {
+  border: none;
+  background: transparent;
+  padding: 7px 16px;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.toggle-btn.active {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.btn-primary:hover { background: var(--color-primary-hover); }
+
+/* The primary action sits ahead of the view/theme controls, so it is sized
+   up a little to stay the obvious first thing to reach for. */
+.btn-lg {
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 11px 22px;
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+.btn-secondary:hover { border-color: var(--color-primary); }
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+.btn-ghost:hover { background: var(--color-bg); }
+
+.btn-danger {
+  background: transparent;
+  color: var(--color-danger);
+  border-color: var(--color-danger-border);
+}
+.btn-danger:hover { background: var(--color-danger-hover-bg); }
+
+/* ---------- Controls bar ---------- */
+
+.controls-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 14px 24px;
+}
+
+.controls-bar input[type="search"],
+.controls-bar select {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+#search-input { flex: 1 1 220px; min-width: 160px; }
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+main {
+  padding: 0 24px 32px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ---------- Calendar view ---------- */
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#calendar-month-label {
+  font-size: 1.1rem;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  min-width: 120px;
+}
+
+#week-start-toggle-label {
+  flex: 0 0 auto;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  padding: 6px 0;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  min-height: 84px;
+  padding: 6px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.calendar-day:hover { border-color: var(--color-primary); }
+
+.calendar-day.outside-month { opacity: 0.4; }
+
+.calendar-day.is-today {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 1px var(--color-primary);
+}
+
+.calendar-day-number {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.calendar-day-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.calendar-day-more {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+/* ---------- Week view ("This week") ---------- */
+
+.calendar-grid.is-week-view .calendar-day {
+  min-height: 230px;
+  align-items: stretch;
+  gap: 5px;
+}
+
+.week-task-chip {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  padding: 4px 7px;
+  border-radius: 6px;
+  border-left: 3px solid currentColor;
+  background: var(--color-bg);
+  text-align: left;
+  /* Long titles wrap instead of forcing the column wider. */
+  overflow-wrap: anywhere;
+}
+
+.week-task-time {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.week-task-chip.not-started { color: var(--color-not-started); }
+.week-task-chip.planning { color: var(--color-planning); }
+.week-task-chip.writing { color: var(--color-writing); }
+.week-task-chip.proofread { color: var(--color-proofread); }
+.week-task-chip.citations { color: var(--color-citations); }
+.week-task-chip.ongoing { color: var(--color-ongoing); }
+.week-task-chip.done { color: var(--color-done); }
+.week-task-chip.submitted { color: var(--color-submitted); }
+
+/* ---------- Task list / cards ---------- */
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  box-shadow: var(--shadow);
+}
+
+.task-card-check {
+  margin-top: 3px;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.task-card-body {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.task-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.task-card-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.task-card.is-submitted .task-card-name {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.task-card-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.status-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-badge.not-started { color: var(--color-not-started); background: var(--color-not-started-bg); }
+.status-badge.planning { color: var(--color-planning); background: var(--color-planning-bg); }
+.status-badge.writing { color: var(--color-writing); background: var(--color-writing-bg); }
+.status-badge.proofread { color: var(--color-proofread); background: var(--color-proofread-bg); }
+.status-badge.citations { color: var(--color-citations); background: var(--color-citations-bg); }
+.status-badge.ongoing { color: var(--color-ongoing); background: var(--color-ongoing-bg); }
+.status-badge.done { color: var(--color-done); background: var(--color-done-bg); }
+.status-badge.submitted { color: var(--color-submitted); background: var(--color-submitted-bg); }
+
+.priority-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.priority-badge.high { color: var(--color-priority-high); background: var(--color-priority-high-bg); }
+.priority-badge.medium { color: var(--color-priority-medium); background: var(--color-priority-medium-bg); }
+.priority-badge.low { color: var(--color-priority-low); background: var(--color-priority-low-bg); }
+
+.field-label-optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: 40px 0;
+}
+
+/* ---------- Footer ---------- */
+
+.app-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px 24px 32px;
+}
+
+/* ---------- Modal ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 5vh 16px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.modal {
+  background: var(--color-surface);
+  border-radius: 14px;
+  width: 100%;
+  max-width: 440px;
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-header h2 { margin: 0; font-size: 1.1rem; }
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-text-muted);
+}
+
+.field-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin: 12px 0 5px;
+}
+
+#task-form input[type="text"],
+#task-form input[type="date"],
+#task-form select,
+#task-form textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+#task-form textarea { resize: vertical; }
+
+/* Due date and its optional time sit side by side. */
+.field-row { display: flex; gap: 10px; }
+.field-col { flex: 1; min-width: 0; }
+#task-form input[type="time"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.modal-actions-right {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+#day-modal-add-btn { margin-top: 14px; width: 100%; }
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  .app-header { padding: 14px 16px; }
+  .controls-bar { padding: 12px 16px; }
+  main { padding: 0 12px 24px; }
+  .calendar-day { min-height: 60px; }
+  .calendar-weekdays span:nth-child(n) { font-size: 0.68rem; }
+  .app-title { font-size: 1.2rem; margin-right: 0; flex-basis: 100%; }
+  #week-start-toggle-label { flex-basis: 100%; justify-content: center; }
+
+  /* Seven tall columns are unreadable on a phone, so the week becomes a
+     vertical list of days — each cell already carries its own weekday label. */
+  .calendar-grid.is-week-view { grid-template-columns: 1fr; }
+  .calendar-grid.is-week-view .calendar-day { min-height: 0; }
+}
+
+/* ---------- Shared version / copyright bar ---------- */
+
+.site-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 14px 24px;
+  background: var(--color-bar-bg);
+  color: var(--color-bar-text);
+  font-size: 0.78rem;
+}
+
+.site-bar a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.site-bar a:hover { opacity: 0.75; }
+
+.site-bar-version {
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}

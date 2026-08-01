@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janis Narvas | Study Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1.0.0">
+<!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
+<script src="../theme.js?v=1.0.0"></script>
+</head>
+<body>
+
+<header class="app-header">
+  <a href="../" class="home-link" aria-label="Back to all tools">&larr; All tools</a>
+  <h1 class="app-title">Study Tracker</h1>
+
+  <button type="button" id="add-task-btn" class="btn btn-primary btn-lg">+ Add Task</button>
+
+  <div class="view-toggle" role="tablist" aria-label="View switch">
+    <button type="button" class="toggle-btn active" data-view="calendar" role="tab" aria-selected="true">Calendar</button>
+    <button type="button" class="toggle-btn" data-view="list" role="tab" aria-selected="false">List</button>
+  </div>
+
+  <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">☾</button>
+</header>
+
+<div class="controls-bar">
+  <input type="search" id="search-input" placeholder="Search by name or course…" aria-label="Search tasks">
+
+  <select id="status-filter" aria-label="Filter by status">
+    <option value="all">All statuses</option>
+    <option value="not-started">Not started</option>
+    <option value="planning">Planning</option>
+    <option value="writing">Writing</option>
+    <option value="proofread">Proofread</option>
+    <option value="citations">Adding citations</option>
+    <option value="ongoing">Ongoing</option>
+    <option value="done">Done</option>
+    <option value="submitted">Submitted</option>
+  </select>
+
+  <label class="checkbox-label" id="week-filter-label">
+    <input type="checkbox" id="week-filter">
+    This week
+  </label>
+
+  <select id="sort-select" aria-label="Sort tasks">
+    <option value="due-date">Sort: Due date</option>
+    <option value="course">Sort: Course</option>
+  </select>
+</div>
+
+<main>
+
+  <!-- CALENDAR VIEW -->
+  <section id="calendar-view" class="view">
+    <div class="calendar-header">
+      <button type="button" id="prev-month-btn" class="btn btn-ghost" aria-label="Previous month">&larr;</button>
+      <h2 id="calendar-month-label"></h2>
+      <button type="button" id="next-month-btn" class="btn btn-ghost" aria-label="Next month">&rarr;</button>
+      <button type="button" id="today-btn" class="btn btn-secondary">Today</button>
+      <label class="checkbox-label" id="week-start-toggle-label">
+        <input type="checkbox" id="week-start-toggle">
+        Start week on Monday
+      </label>
+    </div>
+    <div id="calendar-weekdays" class="calendar-weekdays"></div>
+    <div id="calendar-grid" class="calendar-grid"></div>
+  </section>
+
+  <!-- LIST VIEW -->
+  <section id="list-view" class="view" hidden>
+    <div id="task-list" class="task-list"></div>
+    <p id="list-empty-msg" class="empty-msg" hidden>No tasks match your filters.</p>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <button type="button" id="export-ics-btn" class="btn btn-secondary">Export to calendar (.ics)</button>
+  <button type="button" id="import-ics-btn" class="btn btn-ghost">Import your calendar</button>
+  <input type="file" id="import-ics-input" accept=".ics,text/calendar" hidden>
+</footer>
+
+<!-- ADD/EDIT TASK MODAL -->
+<div id="task-modal" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+    <div class="modal-header">
+      <h2 id="task-modal-title">Add Task</h2>
+      <button type="button" class="modal-close" data-close-modal="task-modal" aria-label="Close">&times;</button>
+    </div>
+    <form id="task-form">
+      <input type="hidden" id="task-id">
+
+      <label class="field-label" for="task-name">Task / assignment name</label>
+      <input type="text" id="task-name" required>
+
+      <label class="field-label" for="task-course">Course</label>
+      <input type="text" id="task-course" placeholder="e.g. MMS 112, Math 10">
+
+      <label class="field-label" for="task-type">Task type</label>
+      <input type="text" id="task-type" placeholder="e.g. DF Essay, Quiz">
+
+      <div class="field-row">
+        <div class="field-col">
+          <label class="field-label" for="task-due-date">Due date</label>
+          <input type="date" id="task-due-date" required>
+        </div>
+        <div class="field-col">
+          <label class="field-label" for="task-due-time">Time <span class="field-label-optional">(optional)</span></label>
+          <input type="time" id="task-due-time">
+        </div>
+      </div>
+
+      <label class="field-label" for="task-status">Status</label>
+      <select id="task-status">
+        <option value="not-started">Not started</option>
+        <option value="planning">Planning</option>
+        <option value="writing">Writing</option>
+        <option value="proofread">Proofread</option>
+        <option value="citations">Adding citations</option>
+        <option value="ongoing">Ongoing</option>
+        <option value="done">Done</option>
+        <option value="submitted">Submitted</option>
+      </select>
+
+      <label class="field-label" for="task-priority">Priority <span class="field-label-optional">(optional)</span></label>
+      <select id="task-priority">
+        <option value="">No priority</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+
+      <label class="field-label" for="task-notes">Notes</label>
+      <textarea id="task-notes" rows="4"></textarea>
+
+      <div class="modal-actions">
+        <button type="button" id="delete-task-btn" class="btn btn-danger" hidden>Delete</button>
+        <div class="modal-actions-right">
+          <button type="button" class="btn btn-ghost" data-close-modal="task-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- DAY PANEL MODAL (tasks due on a clicked calendar date) -->
+<div id="day-modal" class="modal-overlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="day-modal-title">
+    <div class="modal-header">
+      <h2 id="day-modal-title">Tasks</h2>
+      <button type="button" class="modal-close" data-close-modal="day-modal" aria-label="Close">&times;</button>
+    </div>
+    <div id="day-modal-list" class="task-list"></div>
+    <button type="button" id="day-modal-add-btn" class="btn btn-primary">+ Add task for this day</button>
+  </div>
+</div>
+
+<!-- Version + copyright bar, filled in by sitebar.js (year is generated). -->
+<footer class="site-bar" data-app-version="1.0.0"></footer>
+
+<script src="script.js?v=1.0.0"></script>
+<script src="../sitebar.js?v=1.0.0"></script>
+</body>
+</html>
