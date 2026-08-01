@@ -58,6 +58,16 @@ body {
   font-size: 0.9rem;
 }
 
+/* Icon-only home link. The accessible name lives on aria-label, since the
+   emoji alone announces as "house" to a screen reader. */
+.site-home {
+  font-size: 1.35rem;
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0.85;
+}
+.site-home:hover { opacity: 1; }
+
 main {
   flex: 1;
   max-width: 900px;
