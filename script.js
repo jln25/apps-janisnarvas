@@ -7,7 +7,7 @@
 const TOOLS = [
   {
     name: 'Study Tracker',
-    description: 'Track assignments and due dates with a calendar and list view.',
+    description: 'WIP. Track assignments and due dates with a calendar and list view.',
     path: 'study-tracker/',
     icon: '📅',
   },
