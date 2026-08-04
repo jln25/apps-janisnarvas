@@ -1,35 +1,39 @@
 /* ==========================================================================
    sitebar.js — shared footer bar for every page on this site
-   Renders into <footer class="site-bar" data-app-version="1.0.0"></footer>.
+   Renders into <footer class="site-bar"></footer>.
 
-   The year is generated at load rather than hardcoded, so the copyright
-   stays correct without anyone remembering to edit it each January.
+   Holds the licensing line, so it appears on every page without the text
+   being pasted into each one. `prefix` lets pages inside a subfolder point
+   back up at the licence page.
    ========================================================================== */
 
 (() => {
+  const CC_DEED = 'https://creativecommons.org/licenses/by/4.0/deed.en';
+
   function render() {
     document.querySelectorAll('.site-bar').forEach((bar) => {
       if (bar.dataset.rendered) return; // guard against double-invocation
       bar.dataset.rendered = 'true';
 
-      const version = bar.dataset.appVersion;
+      // Pages one level down (the apps) need "../" to reach license.html.
+      const prefix = bar.dataset.rootPrefix || '';
 
-      if (version) {
-        const v = document.createElement('span');
-        v.className = 'site-bar-version';
-        v.textContent = `v${version}`;
-        bar.appendChild(v);
-      }
+      const line = document.createElement('span');
+      line.className = 'site-bar-license';
 
-      const copy = document.createElement('span');
-      copy.append(`© ${new Date().getFullYear()}. `);
+      const mit = document.createElement('a');
+      mit.href = `${prefix}license.html`;
+      mit.textContent = 'MIT License';
 
-      const link = document.createElement('a');
-      link.href = 'https://janisnarvas.com';
-      link.textContent = 'Janis Narvas';
-      copy.appendChild(link);
+      const cc = document.createElement('a');
+      cc.href = CC_DEED;
+      cc.target = '_blank';
+      cc.rel = 'noopener';
+      cc.textContent = 'CC BY 4.0';
 
-      bar.appendChild(copy);
+      line.append('Open source. Code under the ', mit, '; the writing and design under ', cc,
+                  '. Free to share and adapt.');
+      bar.appendChild(line);
     });
   }
 

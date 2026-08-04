@@ -182,7 +182,58 @@ main {
 }
 .site-bar a:hover { opacity: 0.75; }
 
-.site-bar-version {
-  opacity: 0.6;
-  font-variant-numeric: tabular-nums;
+.site-bar-license {
+  max-width: 760px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+
+/* ---------- License page ---------- */
+
+.prose {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 24px 20px;
+}
+
+.prose h1 { font-size: 2rem; margin: 0 0 12px; }
+
+.prose-intro {
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+}
+
+.prose h2 {
+  font-size: 1.15rem;
+  margin: 36px 0 2px;
+  padding-top: 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.prose h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  margin: 0 0 10px;
+}
+
+.prose p { line-height: 1.7; margin: 0 0 14px; }
+.prose a { color: var(--color-primary); }
+
+/* The licence text is quoted verbatim, so it keeps its own line breaks and
+   scrolls sideways on narrow screens rather than reflowing. */
+.license-text {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  color: var(--color-text-muted);
 }
