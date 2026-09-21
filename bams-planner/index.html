@@ -75,6 +75,11 @@
 
 <main>
 
+  <p class="page-notice no-print">
+    This tool is still under construction. Feel free to send me your feedback and
+    suggestions using my <a href="https://janisnarvas.com/contact">Contact form</a>. Thank you!
+  </p>
+
   <!-- DASHBOARD -->
   <section class="dashboard">
     <div class="dashboard-headline">
@@ -108,6 +113,10 @@
       <option value="in-progress">In progress</option>
       <option value="completed">Completed</option>
     </select>
+    <div class="group-toggle" role="tablist" aria-label="Group courses by">
+      <button type="button" class="group-btn active" data-group-by="category" role="tab" aria-selected="true">By category</button>
+      <button type="button" class="group-btn" data-group-by="term" role="tab" aria-selected="false">By term</button>
+    </div>
   </section>
 
   <!-- COURSE LIST -->
