@@ -341,21 +341,12 @@ function renderCourseList() {
   els.courseList.innerHTML = '';
 
   renderByTerm(filtered);
-
-  let lastCategory = null;
-  filtered.forEach((course) => {
-    if (course.category !== lastCategory) {
-      els.courseList.appendChild(buildCategoryHeading(course.category));
-      lastCategory = course.category;
-    }
-    els.courseList.appendChild(buildCourseRow(course));
-  });
 }
 
 /* ---------- Grouping by term ----------
-   Terms are free text ("2027 Term 1"), so they are grouped by exact label and
-   ordered naturally — digit runs compare as numbers, which keeps
-   "2026 Term 2" before "2027 Term 1" instead of sorting as plain strings. */
+   Courses are grouped under the term they are assigned to. Everything starts
+   under "No term assigned", which is the pool the student plans out of, and
+   it sorts last so the scheduled terms read top-down in order. */
 
 /** Natural-order comparison so embedded numbers sort numerically. */
 function compareNatural(a, b) {
@@ -403,30 +394,6 @@ function buildTermHeading(term, count, units) {
   return heading;
 }
 
-function buildCategoryHeading(category) {
-  const heading = document.createElement('div');
-  heading.className = 'course-category-heading';
-
-  const name = document.createElement('span');
-  name.textContent = category;
-  heading.appendChild(name);
-
-  const req = CATEGORY_REQUIREMENTS[category];
-  if (req) {
-    const claimed = courses.filter((c) => c.category === category && c.status).length;
-    const detail = document.createElement('span');
-    detail.className = 'course-category-req';
-    // A category may carry a note instead of a unit requirement (Mandated),
-    // in which case the note replaces the "N units required" segment.
-    const parts = [`${claimed}/${req.courses} courses`];
-    if (req.units) parts.push(`${req.units} units required`);
-    if (req.note) parts.push(req.note);
-    detail.textContent = parts.join(' · ');
-    heading.appendChild(detail);
-  }
-
-  return heading;
-}
 
 /**
  * The prerequisite line under a course title. It flags unmet requirements
