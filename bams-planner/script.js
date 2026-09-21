@@ -13,13 +13,34 @@ const GROUP_SLUG = {
 };
 const STATUS_LABELS = { '': '—', planned: 'Planned', 'in-progress': 'In progress', completed: 'Completed' };
 
+/* ---------- Terms ----------
+   Terms are picked from a fixed list rather than typed, so they can be
+   ordered — which is what makes "this prerequisite is in an earlier term"
+   a question the planner can actually answer.
+
+   The list always opens at Term 1 of the current calendar year regardless of
+   the month, since a plan is written forward from the start of a year. */
+
+const TERMS_PER_YEAR = 3;   // UPOU runs trimesters
+const TERM_YEARS = 6;       // 4-year program plus headroom for a slower pace
+
+const TERM_OPTIONS = (() => {
+  const startYear = new Date().getFullYear();
+  const out = [];
+  for (let y = 0; y < TERM_YEARS; y++) {
+    for (let t = 1; t <= TERMS_PER_YEAR; t++) out.push(`${startYear + y} Term ${t}`);
+  }
+  return out;
+})();
+
+/** Position of a term in the sequence; -1 when unset or not recognised. */
+function termIndex(term) {
+  return TERM_OPTIONS.indexOf(term);
+}
+
 /* ---------- State ---------- */
 
-const GROUP_BY_KEY = 'bamsPlanner.groupBy';
-
 let courses = loadCourses();
-// 'category' (curriculum order) or 'term' (the plan as it is scheduled).
-let groupBy = localStorage.getItem(GROUP_BY_KEY) === 'term' ? 'term' : 'category';
 
 /* ---------- Persistence ---------- */
 
@@ -47,9 +68,11 @@ const els = {
   dashboardTotalBar: document.getElementById('dashboard-total-bar'),
   dashboardNongwaList: document.getElementById('dashboard-nongwa-list'),
 
+  termSummary: document.getElementById('term-summary'),
+  termSummaryList: document.getElementById('term-summary-list'),
+
   categoryFilter: document.getElementById('category-filter'),
   statusFilter: document.getElementById('status-filter'),
-  groupBtns: document.querySelectorAll('.group-btn'),
   courseList: document.getElementById('course-list'),
 
   exportCsvBtn: document.getElementById('export-csv-btn'),
@@ -146,6 +169,45 @@ function renderDashboard() {
   });
 }
 
+/* ---------- Rendering: term load summary ----------
+   A compact read of how heavy each term is, so an overloaded term is visible
+   without scrolling the whole list. Only terms with something in them appear;
+   an empty plan hides the panel entirely rather than showing 18 blank rows. */
+
+function renderTermSummary() {
+  const load = new Map();
+  courses.forEach((course) => {
+    if (!course.term || !course.status) return; // untagged courses are not part of the plan
+    const entry = load.get(course.term) || { units: 0, count: 0 };
+    entry.units += course.units;
+    entry.count += 1;
+    load.set(course.term, entry);
+  });
+
+  els.termSummary.hidden = load.size === 0;
+  els.termSummaryList.innerHTML = '';
+  if (load.size === 0) return;
+
+  [...load.keys()]
+    .sort((a, b) => {
+      const ai = termIndex(a); const bi = termIndex(b);
+      // Terms outside the generated list (older saved data) sort last.
+      if (ai === -1 || bi === -1) return ai === bi ? a.localeCompare(b) : (ai === -1 ? 1 : -1);
+      return ai - bi;
+    })
+    .forEach((term) => {
+      const { units, count } = load.get(term);
+      const item = document.createElement('div');
+      item.className = 'term-summary-item';
+      item.innerHTML = `
+        <span class="term-summary-name">${term}</span>
+        <span class="term-summary-units">${units} units</span>
+        <span class="term-summary-count">${count} course${count === 1 ? '' : 's'}</span>
+      `;
+      els.termSummaryList.appendChild(item);
+    });
+}
+
 /* ---------- Prerequisites ----------
    Formal prerequisites come from the FICS course pages. Where the official
    curriculum flowchart (bams.mcco.ph, Curriculum 1.2.0) shows an ordering
@@ -184,6 +246,46 @@ function prereqStatus(course) {
     // so it never counts against met.
     met: missingCourses.length === 0 && unitsShort === 0,
   };
+}
+
+/**
+ * Why a course cannot be planned yet, as a list of plain-English reasons.
+ * Empty means it is fine to plan.
+ *
+ * A prerequisite counts as satisfied when it is already passed, or when it is
+ * planned / in progress in a strictly earlier term — you cannot sit a course
+ * and its prerequisite in the same term.
+ */
+function planBlockers(course) {
+  const prereqs = course.prereqs || [];
+  if (prereqs.length === 0) return [];
+
+  const myIndex = termIndex(course.term);
+  if (myIndex === -1) {
+    return [`Pick a term for ${course.code} first, so its prerequisites can be checked against it.`];
+  }
+
+  const reasons = [];
+  prereqs.forEach((code) => {
+    const pre = courses.find((c) => c.code === code);
+    if (!pre) return;
+
+    if (pre.status === 'completed') return; // already passed, term is irrelevant
+
+    if (pre.status !== 'planned' && pre.status !== 'in-progress') {
+      reasons.push(`${code} is not yet passed or planned.`);
+      return;
+    }
+
+    const preIndex = termIndex(pre.term);
+    if (preIndex === -1) {
+      reasons.push(`${code} has no term set, so it cannot be shown to come first.`);
+    } else if (preIndex >= myIndex) {
+      reasons.push(`${code} is in ${pre.term}, which is not before ${course.term}.`);
+    }
+  });
+
+  return reasons;
 }
 
 /* ---------- Elective pool limits ---------- */
@@ -238,10 +340,7 @@ function renderCourseList() {
 
   els.courseList.innerHTML = '';
 
-  if (groupBy === 'term') {
-    renderByTerm(filtered);
-    return;
-  }
+  renderByTerm(filtered);
 
   let lastCategory = null;
   filtered.forEach((course) => {
@@ -362,8 +461,10 @@ function buildPrereqLine(course) {
     line.appendChild(seq);
   }
 
-  // Only worth flagging while the course is still ahead of you.
-  const worthFlagging = course.status !== 'completed' && course.status !== 'in-progress';
+  // Only flag courses you have not committed to yet. Planning is already
+  // gated on prerequisites (see planBlockers), so a planned course has passed
+  // that check — flagging it here would contradict what the app just allowed.
+  const worthFlagging = !course.status;
   if (worthFlagging && !status.met) {
     line.classList.add('is-unmet');
     const gaps = [];
@@ -428,8 +529,14 @@ function buildCourseRow(course) {
     // Elective pools allow only a fixed number of units toward the degree,
     // so refuse a change that would push the pool past its cap.
     const overflow = poolOverflowMessage(course);
-    if (overflow) {
-      alert(overflow);
+    // Planning a course means committing to a term, so its prerequisites must
+    // already sit in an earlier one. Only 'Planned' is gated: recording a
+    // course as passed or in progress is history, which the planner accepts
+    // as given (credited courses, consent of instructor, and so on).
+    const blockers = course.status === 'planned' ? planBlockers(course) : [];
+
+    if (overflow || blockers.length) {
+      alert(overflow || `Cannot plan ${course.code} yet:\n\n· ${blockers.join('\n· ')}`);
       course.status = previous;
       statusSelect.value = previous;
     }
@@ -437,19 +544,39 @@ function buildCourseRow(course) {
     statusSelect.className = `status-${course.status || 'none'}`;
     saveCourses();
     renderDashboard();
+    renderTermSummary();
     renderCourseList();
   });
 
-  const termInput = document.createElement('input');
-  termInput.type = 'text';
-  termInput.placeholder = 'e.g. 2027 Term 1';
-  termInput.value = course.term;
+  const termInput = document.createElement('select');
+  termInput.className = 'course-term';
+  const termChoices = ['', ...TERM_OPTIONS];
+  // Keep any saved term that predates this list so existing plans survive.
+  if (course.term && !termChoices.includes(course.term)) termChoices.push(course.term);
+  termChoices.forEach((t) => {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t || 'No term';
+    if (t === course.term) opt.selected = true;
+    termInput.appendChild(opt);
+  });
+
   termInput.addEventListener('change', () => {
-    course.term = termInput.value.trim();
+    const previous = course.term;
+    course.term = termInput.value;
+
+    // Moving a planned course can break the ordering its prerequisites rely on.
+    const blockers = course.status === 'planned' ? planBlockers(course) : [];
+    if (blockers.length) {
+      alert(`Cannot move ${course.code} to ${course.term || 'no term'}:\n\n· ${blockers.join('\n· ')}`);
+      course.term = previous;
+      termInput.value = previous;
+    }
+
     saveCourses();
-    // In term view the term is what the grouping is built from, so editing it
-    // has to rebuild the list rather than leave the row under its old heading.
-    if (groupBy === 'term') renderCourseList();
+    // The term drives the grouping, so the list has to be rebuilt rather than
+    // leave the row sitting under its old heading.
+    renderCourseList();
   });
 
   row.append(main, units, statusSelect, termInput);
@@ -458,22 +585,6 @@ function buildCourseRow(course) {
 
 [els.categoryFilter, els.statusFilter].forEach((el) => el.addEventListener('change', renderCourseList));
 
-els.groupBtns.forEach((btn) => {
-  btn.addEventListener('click', () => {
-    groupBy = btn.dataset.groupBy;
-    localStorage.setItem(GROUP_BY_KEY, groupBy);
-    syncGroupButtons();
-    renderCourseList();
-  });
-});
-
-function syncGroupButtons() {
-  els.groupBtns.forEach((btn) => {
-    const active = btn.dataset.groupBy === groupBy;
-    btn.classList.toggle('active', active);
-    btn.setAttribute('aria-selected', String(active));
-  });
-}
 
 /* ---------- CSV export ---------- */
 
@@ -518,6 +629,6 @@ function todayISO() {
 /* ---------- Init ---------- */
 
 populateCategoryFilter();
-syncGroupButtons();
 renderDashboard();
+renderTermSummary();
 renderCourseList();
