@@ -343,6 +343,44 @@ main {
   margin-top: 2px;
 }
 
+/* ---------- Prerequisites ---------- */
+
+.course-prereq {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  font-size: 0.74rem;
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+.course-prereq-seq { opacity: 0.75; font-style: italic; }
+
+/* Unmet prerequisites are a hint, not a block — amber rather than an error
+   red, since the planner cannot know about consent of instructor or credit. */
+.course-prereq-flag {
+  color: var(--color-in-progress);
+  font-weight: 600;
+}
+
+/* ---------- Page notice ---------- */
+
+.page-notice {
+  max-width: 920px;
+  margin: 0 auto 20px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-in-progress);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.page-notice a { color: var(--color-primary); }
+
 .course-units {
   font-size: 0.8rem;
   color: var(--color-text-muted);
@@ -444,4 +482,39 @@ main {
 .site-bar-version {
   opacity: 0.6;
   font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Group-by toggle ---------- */
+
+.group-toggle {
+  display: inline-flex;
+  margin-left: auto;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 3px;
+}
+
+.group-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 13px;
+  border-radius: 7px;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.group-btn.active {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 640px) {
+  .list-controls { flex-wrap: wrap; }
+  .group-toggle { margin-left: 0; }
 }

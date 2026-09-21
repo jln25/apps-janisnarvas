@@ -15,7 +15,11 @@ const STATUS_LABELS = { '': '—', planned: 'Planned', 'in-progress': 'In progre
 
 /* ---------- State ---------- */
 
+const GROUP_BY_KEY = 'bamsPlanner.groupBy';
+
 let courses = loadCourses();
+// 'category' (curriculum order) or 'term' (the plan as it is scheduled).
+let groupBy = localStorage.getItem(GROUP_BY_KEY) === 'term' ? 'term' : 'category';
 
 /* ---------- Persistence ---------- */
 
@@ -45,6 +49,7 @@ const els = {
 
   categoryFilter: document.getElementById('category-filter'),
   statusFilter: document.getElementById('status-filter'),
+  groupBtns: document.querySelectorAll('.group-btn'),
   courseList: document.getElementById('course-list'),
 
   exportCsvBtn: document.getElementById('export-csv-btn'),
@@ -141,6 +146,46 @@ function renderDashboard() {
   });
 }
 
+/* ---------- Prerequisites ----------
+   Formal prerequisites come from the FICS course pages. Where the official
+   curriculum flowchart (bams.mcco.ph, Curriculum 1.2.0) shows an ordering
+   that FICS does not formally require, it is carried as `sequenceAfter` and
+   shown as a suggestion — so it informs the plan without wrongly implying a
+   course is closed to you. */
+
+/** Course codes marked completed, for prerequisite checks. */
+function completedCodes() {
+  return new Set(courses.filter((c) => c.status === 'completed').map((c) => c.code));
+}
+
+/** All units earned, PE and NSTP included — "units earned" on a transcript
+    counts everything, even what is excluded from the 142 toward the degree. */
+function unitsEarned() {
+  return courses.filter((c) => c.status === 'completed').reduce((sum, c) => sum + c.units, 0);
+}
+
+/**
+ * Works out whether a course's prerequisites are satisfied.
+ * Returns the missing pieces so the row can say what is actually outstanding.
+ */
+function prereqStatus(course) {
+  const done = completedCodes();
+  const missingCourses = (course.prereqs || []).filter((code) => !done.has(code));
+  const earned = unitsEarned();
+  const unitsShort = course.prereqUnits ? Math.max(0, course.prereqUnits - earned) : 0;
+  const pendingSequence = (course.sequenceAfter || []).filter((code) => !done.has(code));
+
+  return {
+    missingCourses,
+    unitsShort,
+    earned,
+    pendingSequence,
+    // A free-text note (e.g. "Senior standing") cannot be checked mechanically,
+    // so it never counts against met.
+    met: missingCourses.length === 0 && unitsShort === 0,
+  };
+}
+
 /* ---------- Elective pool limits ---------- */
 
 /** Units in a pool that are counted as "claimed" — anything not left blank. */
@@ -193,6 +238,11 @@ function renderCourseList() {
 
   els.courseList.innerHTML = '';
 
+  if (groupBy === 'term') {
+    renderByTerm(filtered);
+    return;
+  }
+
   let lastCategory = null;
   filtered.forEach((course) => {
     if (course.category !== lastCategory) {
@@ -201,6 +251,57 @@ function renderCourseList() {
     }
     els.courseList.appendChild(buildCourseRow(course));
   });
+}
+
+/* ---------- Grouping by term ----------
+   Terms are free text ("2027 Term 1"), so they are grouped by exact label and
+   ordered naturally — digit runs compare as numbers, which keeps
+   "2026 Term 2" before "2027 Term 1" instead of sorting as plain strings. */
+
+/** Natural-order comparison so embedded numbers sort numerically. */
+function compareNatural(a, b) {
+  return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+}
+
+function renderByTerm(list) {
+  const byTerm = new Map();
+  list.forEach((course) => {
+    const key = course.term.trim() || '';
+    if (!byTerm.has(key)) byTerm.set(key, []);
+    byTerm.get(key).push(course);
+  });
+
+  // Unassigned courses sort last: they are the backlog, not part of the plan.
+  const terms = [...byTerm.keys()].sort((a, b) => {
+    if (a === '') return 1;
+    if (b === '') return -1;
+    return compareNatural(a, b);
+  });
+
+  if (terms.length === 0) return;
+
+  terms.forEach((term) => {
+    const group = byTerm.get(term);
+    const units = group.reduce((sum, c) => sum + c.units, 0);
+    els.courseList.appendChild(buildTermHeading(term, group.length, units));
+    group.forEach((course) => els.courseList.appendChild(buildCourseRow(course)));
+  });
+}
+
+function buildTermHeading(term, count, units) {
+  const heading = document.createElement('div');
+  heading.className = 'course-category-heading';
+
+  const name = document.createElement('span');
+  name.textContent = term || 'No term assigned';
+  heading.appendChild(name);
+
+  const detail = document.createElement('span');
+  detail.className = 'course-category-req';
+  detail.textContent = `${count} course${count === 1 ? '' : 's'} · ${units} units`;
+  heading.appendChild(detail);
+
+  return heading;
 }
 
 function buildCategoryHeading(category) {
@@ -226,6 +327,55 @@ function buildCategoryHeading(category) {
   }
 
   return heading;
+}
+
+/**
+ * The prerequisite line under a course title. It flags unmet requirements
+ * as a hint rather than a lock: the planner does not know about consent of
+ * instructor, credited courses or anything else the student may have.
+ */
+function buildPrereqLine(course) {
+  const hasAny = (course.prereqs || []).length || course.prereqUnits
+    || course.prereqNote || (course.sequenceAfter || []).length;
+  if (!hasAny) return null;
+
+  const status = prereqStatus(course);
+  const line = document.createElement('div');
+  line.className = 'course-prereq';
+
+  const parts = [];
+  if ((course.prereqs || []).length) parts.push(course.prereqs.join(' + '));
+  if (course.prereqUnits) parts.push(`${course.prereqUnits} units earned`);
+  if (course.prereqNote) parts.push(course.prereqNote);
+
+  if (parts.length) {
+    const label = document.createElement('span');
+    label.textContent = `Prereq: ${parts.join(' · ')}`;
+    line.appendChild(label);
+  }
+
+  // The flowchart's ordering, where it goes beyond what FICS formally requires.
+  if ((course.sequenceAfter || []).length) {
+    const seq = document.createElement('span');
+    seq.className = 'course-prereq-seq';
+    seq.textContent = `Suggested after ${course.sequenceAfter.join(' + ')}`;
+    line.appendChild(seq);
+  }
+
+  // Only worth flagging while the course is still ahead of you.
+  const worthFlagging = course.status !== 'completed' && course.status !== 'in-progress';
+  if (worthFlagging && !status.met) {
+    line.classList.add('is-unmet');
+    const gaps = [];
+    if (status.missingCourses.length) gaps.push(`needs ${status.missingCourses.join(' + ')}`);
+    if (status.unitsShort) gaps.push(`${status.unitsShort} more units (${status.earned} earned)`);
+    const flag = document.createElement('span');
+    flag.className = 'course-prereq-flag';
+    flag.textContent = `Not yet met — ${gaps.join(', ')}`;
+    line.appendChild(flag);
+  }
+
+  return line;
 }
 
 function buildCourseRow(course) {
@@ -254,6 +404,9 @@ function buildCourseRow(course) {
     noteLine.textContent = course.note;
     main.appendChild(noteLine);
   }
+
+  const prereqLine = buildPrereqLine(course);
+  if (prereqLine) main.appendChild(prereqLine);
 
   const units = document.createElement('div');
   units.className = 'course-units';
@@ -294,6 +447,9 @@ function buildCourseRow(course) {
   termInput.addEventListener('change', () => {
     course.term = termInput.value.trim();
     saveCourses();
+    // In term view the term is what the grouping is built from, so editing it
+    // has to rebuild the list rather than leave the row under its old heading.
+    if (groupBy === 'term') renderCourseList();
   });
 
   row.append(main, units, statusSelect, termInput);
@@ -301,6 +457,23 @@ function buildCourseRow(course) {
 }
 
 [els.categoryFilter, els.statusFilter].forEach((el) => el.addEventListener('change', renderCourseList));
+
+els.groupBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    groupBy = btn.dataset.groupBy;
+    localStorage.setItem(GROUP_BY_KEY, groupBy);
+    syncGroupButtons();
+    renderCourseList();
+  });
+});
+
+function syncGroupButtons() {
+  els.groupBtns.forEach((btn) => {
+    const active = btn.dataset.groupBy === groupBy;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-selected', String(active));
+  });
+}
 
 /* ---------- CSV export ---------- */
 
@@ -345,5 +518,6 @@ function todayISO() {
 /* ---------- Init ---------- */
 
 populateCategoryFilter();
+syncGroupButtons();
 renderDashboard();
 renderCourseList();
