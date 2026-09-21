@@ -237,3 +237,12 @@ main {
   white-space: pre-wrap;
   color: var(--color-text-muted);
 }
+
+/* ---------- Guide page ---------- */
+
+.prose ul, .prose ol { line-height: 1.7; padding-left: 22px; }
+.prose li { margin-bottom: 6px; }
+
+/* Contents list: a compact index, so it reads tighter than body copy. */
+.guide-contents { line-height: 1.5; }
+.guide-contents li { margin-bottom: 2px; }
