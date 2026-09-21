@@ -6,6 +6,14 @@
 :root {
   --color-primary: #1e73be;
   --color-accent: #0d9488;
+
+  /* Call-to-action button. Deliberately the same cyan in both themes: it is
+     bright enough to read on the light and the dark background alike.
+     Its label is near-black rather than white — white on this cyan is only
+     1.6:1, which fails WCAG AA, while the dark label reaches about 9.6:1. */
+  --color-cta: #49e3e4;
+  --color-cta-hover: #2ed3d4;
+  --color-cta-text: #0a2b2e;
   --color-bg: #f9f9f5;
   --color-surface: #ffffff;
   --color-border: #e5e5e0;
@@ -246,3 +254,26 @@ main {
 /* Contents list: a compact index, so it reads tighter than body copy. */
 .guide-contents { line-height: 1.5; }
 .guide-contents li { margin-bottom: 2px; }
+
+/* Closing call to action. Left-aligned in the prose column, styled to match
+   the .btn-primary the apps themselves use, so the way back into the tool
+   reads as an action rather than one more link in the body copy.
+   Selector is doubled up because plain `.prose a` would otherwise win on
+   specificity and repaint the text in the link colour. */
+.prose-cta-wrap {
+  margin: 34px 0 8px;
+}
+
+.prose .prose-cta {
+  display: inline-block;
+  padding: 11px 22px;
+  border-radius: var(--radius);
+  background: var(--color-cta);
+  color: var(--color-cta-text);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.prose .prose-cta:hover { background: var(--color-cta-hover); }
