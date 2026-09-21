@@ -68,6 +68,7 @@ const els = {
   dashboardTotalBar: document.getElementById('dashboard-total-bar'),
   dashboardNongwaList: document.getElementById('dashboard-nongwa-list'),
 
+  backupReminder: document.getElementById('backup-reminder'),
   termSummary: document.getElementById('term-summary'),
   termSummaryList: document.getElementById('term-summary-list'),
 
@@ -173,6 +174,13 @@ function renderDashboard() {
    A compact read of how heavy each term is, so an overloaded term is visible
    without scrolling the whole list. Only terms with something in them appear;
    an empty plan hides the panel entirely rather than showing 18 blank rows. */
+
+/* The plan lives only in this browser, and there is no JSON backup to
+   restore from — so once there is anything worth losing, say so. */
+function renderBackupReminder() {
+  const hasPlan = courses.some((c) => c.status || c.term);
+  els.backupReminder.hidden = !hasPlan;
+}
 
 function renderTermSummary() {
   const load = new Map();
@@ -512,6 +520,7 @@ function buildCourseRow(course) {
     saveCourses();
     renderDashboard();
     renderTermSummary();
+    renderBackupReminder();
     renderCourseList();
   });
 
@@ -598,4 +607,5 @@ function todayISO() {
 populateCategoryFilter();
 renderDashboard();
 renderTermSummary();
+renderBackupReminder();
 renderCourseList();

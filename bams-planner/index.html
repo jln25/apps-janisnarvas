@@ -75,11 +75,13 @@
 
 <main>
 
-  <p class="page-notice no-print">
-    This tool is still under construction. New here? Read the
-    <a href="guide.html">user guide</a>. Feel free to send me your feedback and
-    suggestions using my <a href="https://janisnarvas.com/contact">Contact form</a>. Thank you!
-  </p>
+  <div class="page-notice no-print">
+    <p>This tool is still under construction. Thank you for trying it out!</p>
+    <ul>
+      <li>New here? Read the <a href="guide.html">user guide</a>.</li>
+      <li>Send me your feedback via my <a href="https://janisnarvas.com/contact">contact form</a>.</li>
+    </ul>
+  </div>
 
   <!-- DASHBOARD -->
   <section class="dashboard">
@@ -101,6 +103,13 @@
       <div id="dashboard-nongwa-list" class="dashboard-nongwa-list"></div>
     </div>
   </section>
+
+  <!-- Shown by script.js once there is a plan worth losing. -->
+  <p class="backup-reminder no-print" id="backup-reminder" hidden>
+    <strong>Back up your plan.</strong> It is saved in this browser only — clearing your
+    browsing data will erase it, and it will not follow you to another device.
+    Use <strong>Export CSV</strong> or <strong>Export PDF</strong> above to keep a copy.
+  </p>
 
   <!-- TERM LOAD SUMMARY (built by script.js, updates as courses are tagged) -->
   <section class="term-summary" id="term-summary" hidden>
