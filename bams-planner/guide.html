@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janis Narvas | BAMS Planner User Guide</title>
+<meta name="description" content="How to use the BAMS Planner: track units by category, plan courses by term, read the prerequisite checks, and export your Plan of Study.">
+<link rel="canonical" href="https://apps.janisnarvas.com/bams-planner/guide.html">
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Study Apps">
+<meta property="og:title" content="Janis Narvas | BAMS Planner User Guide">
+<meta property="og:description" content="How to use the BAMS Planner: track units by category, plan courses by term, read the prerequisite checks, and export your Plan of Study.">
+<meta property="og:url" content="https://apps.janisnarvas.com/bams-planner/guide.html">
+<meta property="og:image" content="https://apps.janisnarvas.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=1.2.0">
+<link rel="icon" type="image/png" sizes="512x512" href="../favicon-512.png?v=1.2.0">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png?v=1.2.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<!-- Prose page: uses the site stylesheet only, like license.html. -->
+<link rel="stylesheet" href="../style.css?v=1.2.0">
+<!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
+<script src="../theme.js?v=1.2.0"></script>
+<!-- Google Analytics (GA4) -->
+<script src="../analytics.js?v=1.2.0"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../" class="site-home" title="Study Apps — home" aria-label="Study Apps — home">🏠</a>
+  <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">&#9790;</button>
+</header>
+
+<main class="prose">
+  <h1>BAMS Planner User Guide</h1>
+  <p class="prose-intro">
+    The BAMS Planner is a free tool for mapping your way through the UPOU
+    Bachelor of Arts in Multimedia Studies. It keeps count of your units,
+    lays your courses out term by term, and warns you when a course is not
+    open to you yet. <a href="./">Open the planner</a>.
+  </p>
+
+  <h2>Contents</h2>
+  <ol class="guide-contents">
+    <li><a href="#what">What this is</a></li>
+    <li><a href="#data">Where your data lives</a></li>
+    <li><a href="#progress">The progress dashboard</a></li>
+    <li><a href="#list">The course list</a></li>
+    <li><a href="#status">Marking a course</a></li>
+    <li><a href="#terms">Planning by term</a></li>
+    <li><a href="#prereq">Prerequisites</a></li>
+    <li><a href="#export">Exporting your plan</a></li>
+    <li><a href="#sources">Where the curriculum comes from</a></li>
+    <li><a href="#workflow">A typical first session</a></li>
+  </ol>
+
+  <h2 id="what">1 &middot; What this is</h2>
+  <p>
+    The planner holds the full BAMS curriculum — every GE, Common, Mandated,
+    Major, Production and Capstone course — and lets you record where you are
+    in it. Nothing is filled in for you: you start with every course unmarked
+    and build the plan yourself.
+  </p>
+  <p>
+    It is <strong>unofficial</strong>. It is a planning aid, not an enrolment
+    system and not an academic record. Confirm anything that matters with your
+    program adviser or UPOU's own published curriculum before you act on it.
+  </p>
+
+  <h2 id="data">2 &middot; Where your data lives</h2>
+  <p>
+    There is no account and no login. Everything you enter is stored in your
+    own browser on the device you are using, and never leaves it.
+  </p>
+  <p>
+    That has one consequence worth understanding: <strong>clearing your
+    browsing data will erase your plan</strong>, and your plan will not follow
+    you to another device or browser. If you have spent time on it, export a
+    copy (see <a href="#export">section 8</a>).
+  </p>
+
+  <h2 id="progress">3 &middot; The progress dashboard</h2>
+  <p>
+    The panel at the top counts only courses you have marked
+    <em>Completed</em>. It shows your total against the 142 units the degree
+    requires, then a card per category so you can see which part of the
+    curriculum is lagging.
+  </p>
+  <p>
+    PE and NSTP sit in their own row underneath. They are required, but they
+    do not count toward the 142 units, so they are tracked separately rather
+    than folded into the main total.
+  </p>
+
+  <h2 id="list">4 &middot; The course list</h2>
+  <p>
+    Every course starts under <strong>No term assigned</strong>. Think of that
+    as the pool you plan out of — as you give courses a term, they move up into
+    their own group, and the list reads top-down in the order you intend to
+    take them.
+  </p>
+  <p>
+    The two dropdowns above the list narrow what you are looking at, by
+    category or by status. They only filter the view; nothing is changed or
+    lost while a filter is on.
+  </p>
+
+  <h2 id="status">5 &middot; Marking a course</h2>
+  <p>Each course takes one of four states:</p>
+  <ul>
+    <li><strong>—</strong> untouched; not yet part of your plan</li>
+    <li><strong>Planned</strong> you intend to take it in the term you choose</li>
+    <li><strong>In progress</strong> you are taking it now</li>
+    <li><strong>Completed</strong> you have passed it — this is what the dashboard counts</li>
+  </ul>
+  <p>
+    Elective groups have a ceiling. The GE electives count 9 units toward the
+    degree and the major electives 15, so the planner will stop you marking
+    more than the curriculum can credit.
+  </p>
+
+  <h2 id="terms">6 &middot; Planning by term</h2>
+  <p>
+    Terms are picked from a list rather than typed, so the planner can tell
+    which term comes first. Once you have assigned any, a
+    <strong>Plan by term</strong> panel appears above the list showing each
+    term's unit load — the quickest way to catch a term you have overloaded.
+  </p>
+
+  <h2 id="prereq">7 &middot; Prerequisites</h2>
+  <p>
+    Courses that need something first say so under their title. A course can
+    only be marked <em>Planned</em> once each prerequisite is either already
+    passed, or planned in an <strong>earlier</strong> term — you cannot take a
+    course and its prerequisite in the same term.
+  </p>
+  <p>
+    Marking a course <em>Completed</em> or <em>In progress</em> is never
+    blocked. You may have credit, a substitution or consent of instructor that
+    the planner cannot know about, so recording what actually happened always
+    takes priority over the rule.
+  </p>
+  <p>
+    Some entries show <em>Suggested after</em> instead. Those come from the
+    curriculum flowchart's recommended sequence rather than a formal
+    requirement, so they advise without blocking anything.
+  </p>
+
+  <h2 id="export">8 &middot; Exporting your plan</h2>
+  <p>
+    <strong>Export CSV</strong> downloads every course with its status and
+    term, ready to open in a spreadsheet. <strong>Export PDF</strong> opens
+    your browser's print dialogue — choose <em>Save as PDF</em> as the
+    destination to keep a copy of your Plan of Study. The printed version
+    always comes out on white, whatever theme you are using.
+  </p>
+
+  <h2 id="sources">9 &middot; Where the curriculum comes from</h2>
+  <p>
+    Course codes, titles and units follow UPOU's published BAMS curriculum.
+    Prerequisites come from the individual FICS course pages, and the
+    recommended ordering from the BAMS curriculum flowchart. Where the two
+    disagree, the formal prerequisite is the one enforced and the flowchart's
+    ordering is shown as a suggestion.
+  </p>
+  <p>
+    Curricula change. If you spot something out of date, please
+    <a href="https://janisnarvas.com/contact">send a correction</a>.
+  </p>
+
+  <h2 id="workflow">10 &middot; A typical first session</h2>
+  <ol>
+    <li>Mark everything you have already passed as <strong>Completed</strong>. The dashboard fills in as you go.</li>
+    <li>Mark what you are taking now as <strong>In progress</strong>.</li>
+    <li>Give your next term a few <strong>Planned</strong> courses, checking the prerequisite lines as you choose.</li>
+    <li>Glance at <strong>Plan by term</strong> to see whether the load is reasonable.</li>
+    <li>Export a PDF so you have a copy outside the browser.</li>
+  </ol>
+</main>
+
+<footer class="site-footer">
+  <p>Designed in Los Baños, Laguna ♡</p>
+  <p>Found a bug? <a href="https://janisnarvas.com/contact">Send me a message.</a></p>
+</footer>
+
+<!-- Licensing bar, filled in by sitebar.js. -->
+<footer class="site-bar" data-root-prefix="../"></footer>
+
+<script src="../sitebar.js?v=1.2.0"></script>
+</body>
+</html>
