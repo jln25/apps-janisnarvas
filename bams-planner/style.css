@@ -484,37 +484,60 @@ main {
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Group-by toggle ---------- */
 
-.group-toggle {
-  display: inline-flex;
-  margin-left: auto;
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 3px;
-}
+/* ---------- Term load summary ---------- */
 
-.group-btn {
-  border: none;
-  background: transparent;
-  padding: 6px 13px;
-  border-radius: 7px;
-  font-family: inherit;
-  font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.group-btn.active {
+.term-summary {
   background: var(--color-surface);
-  color: var(--color-primary);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
   box-shadow: var(--shadow);
 }
 
-@media (max-width: 640px) {
-  .list-controls { flex-wrap: wrap; }
-  .group-toggle { margin-left: 0; }
+.term-summary h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin: 0 0 12px;
 }
+
+.term-summary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.term-summary-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.term-summary-name { font-weight: 600; white-space: nowrap; }
+
+.term-summary-units {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.term-summary-count {
+  flex-basis: 100%;
+  color: var(--color-text-muted);
+  opacity: 0.8;
+  font-size: 0.73rem;
+}
+
+/* The term picker is a select now, so it matches the status dropdown. */
+.course-row select.course-term { flex: 0 0 150px; }
