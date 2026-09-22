@@ -308,6 +308,18 @@ main {
 
 .course-category-heading:first-child { margin-top: 0; }
 
+/* Category headings nested inside the unassigned pool. Indented behind a rule
+   and set smaller than a term heading, so the hierarchy is readable at a
+   glance: term > category > course. */
+.course-category-heading-sub {
+  margin: 16px 0 2px;
+  padding-left: 11px;
+  border-left: 2px solid var(--color-border);
+  font-size: 0.72rem;
+  color: var(--color-text);
+  opacity: 0.75;
+}
+
 .course-row {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
