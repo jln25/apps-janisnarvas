@@ -382,8 +382,82 @@ function renderByTerm(list) {
     const group = byTerm.get(term);
     const units = group.reduce((sum, c) => sum + c.units, 0);
     els.courseList.appendChild(buildTermHeading(term, group.length, units));
-    group.forEach((course) => els.courseList.appendChild(buildCourseRow(course)));
+
+    // A scheduled term is a short, deliberate list, so it reads better flat.
+    // The unassigned pool is everything still to be placed — without the
+    // category breakdown it is one long wall of courses to scroll through.
+    if (term === '') {
+      renderByCategory(group);
+    } else {
+      group.forEach((course) => els.courseList.appendChild(buildCourseRow(course)));
+    }
   });
+}
+
+/* ---------- Grouping by category (inside the unassigned pool) ---------- */
+
+/** Curriculum order, read off the data itself so this and the category
+    filter can never drift apart. */
+function categoryOrder() {
+  const order = [];
+  courses.forEach((c) => {
+    if (!order.includes(c.category)) order.push(c.category);
+  });
+  return order;
+}
+
+function renderByCategory(list) {
+  const byCategory = new Map();
+  list.forEach((course) => {
+    if (!byCategory.has(course.category)) byCategory.set(course.category, []);
+    byCategory.get(course.category).push(course);
+  });
+
+  const order = categoryOrder();
+  const rank = (cat) => {
+    const i = order.indexOf(cat);
+    // An unknown category sorts last rather than first, so a typo in the data
+    // shows up at the bottom instead of displacing GE Core.
+    return i === -1 ? order.length : i;
+  };
+
+  [...byCategory.keys()]
+    .sort((a, b) => rank(a) - rank(b))
+    .forEach((category) => {
+      els.courseList.appendChild(buildCategoryHeading(category));
+      byCategory.get(category).forEach((course) => {
+        els.courseList.appendChild(buildCourseRow(course));
+      });
+    });
+}
+
+function buildCategoryHeading(category) {
+  const heading = document.createElement('div');
+  heading.className = 'course-category-heading course-category-heading-sub';
+
+  const name = document.createElement('span');
+  name.textContent = category;
+  heading.appendChild(name);
+
+  const req = CATEGORY_REQUIREMENTS[category];
+  if (req) {
+    // Counted across the whole plan, not just the rows showing: the heading
+    // answers "how much of this category have I dealt with?", which a filter
+    // should narrow the view of without changing the answer.
+    const claimed = courses.filter((c) => c.category === category && c.status).length;
+
+    const detail = document.createElement('span');
+    detail.className = 'course-category-req';
+    // Mandated carries a note instead of a unit requirement, since PE and
+    // NSTP sit outside the 142 units.
+    const parts = [`${claimed}/${req.courses} courses`];
+    if (req.units) parts.push(`${req.units} units required`);
+    if (req.note) parts.push(req.note);
+    detail.textContent = parts.join(' · ');
+    heading.appendChild(detail);
+  }
+
+  return heading;
 }
 
 function buildTermHeading(term, count, units) {
