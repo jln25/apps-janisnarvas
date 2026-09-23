@@ -6,6 +6,11 @@
 
 const STORAGE_KEY = 'bamsPlanner.courses';
 
+/* View preferences are kept apart from the plan itself: they describe how you
+   are looking at it, not what it contains, so a corrupted or cleared view
+   preference must never be able to take the plan down with it. */
+const VIEW_KEY = 'bamsPlanner.view';
+
 const GROUP_ORDER = ['GE', 'Common', 'Mandated', 'Major', 'Production', 'Capstone'];
 const GROUP_SLUG = {
   GE: 'ge', Common: 'common', Mandated: 'mandated',
@@ -59,6 +64,33 @@ function saveCourses() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(courses));
 }
 
+/* Every field is re-derived rather than trusted, so a hand-edited or
+   half-written value degrades to the default view instead of throwing
+   somewhere in the middle of a render. */
+function loadViewPrefs() {
+  const fallback = { hideCompleted: false, collapsed: [] };
+  try {
+    const raw = localStorage.getItem(VIEW_KEY);
+    if (!raw) return fallback;
+    const saved = JSON.parse(raw);
+    return {
+      hideCompleted: saved.hideCompleted === true,
+      collapsed: Array.isArray(saved.collapsed)
+        ? saved.collapsed.filter((c) => typeof c === 'string')
+        : [],
+    };
+  } catch (err) {
+    console.error('Failed to load view preferences from localStorage', err);
+    return fallback;
+  }
+}
+
+function saveViewPrefs() {
+  localStorage.setItem(VIEW_KEY, JSON.stringify(viewPrefs));
+}
+
+let viewPrefs = loadViewPrefs();
+
 /* ---------- DOM references ---------- */
 
 const els = {
@@ -73,6 +105,7 @@ const els = {
   termSummaryList: document.getElementById('term-summary-list'),
 
   categoryFilter: document.getElementById('category-filter'),
+  hideCompleted: document.getElementById('hide-completed'),
   statusFilter: document.getElementById('status-filter'),
   courseList: document.getElementById('course-list'),
 
@@ -148,10 +181,12 @@ function renderDashboard() {
     card.className = 'dashboard-group-card';
     card.style.setProperty('--group-color', `var(--color-${GROUP_SLUG[group]})`);
 
+    // A category with nothing in it yet shouldn't shout as loudly as one in
+    // progress: the empty track is dimmed rather than drawn at full strength.
     card.innerHTML = `
       <div class="dashboard-group-name">${group}</div>
       <div class="dashboard-group-units">${completed} / ${required} units</div>
-      <div class="progress-bar"><div class="progress-bar-fill" style="width:${groupPct}%; background: var(--color-${GROUP_SLUG[group]})"></div></div>
+      <div class="progress-bar${completed === 0 ? ' is-empty' : ''}"><div class="progress-bar-fill" style="width:${groupPct}%; background: var(--color-${GROUP_SLUG[group]})"></div></div>
     `;
     els.dashboardGroups.appendChild(card);
   });
@@ -164,7 +199,7 @@ function renderDashboard() {
     div.innerHTML = `
       <div class="dashboard-group-name">${item.code}</div>
       <div class="dashboard-group-units">${item.completed} / ${item.units} units</div>
-      <div class="progress-bar"><div class="progress-bar-fill" style="width:${pctItem}%"></div></div>
+      <div class="progress-bar${item.completed === 0 ? ' is-empty' : ''}"><div class="progress-bar-fill" style="width:${pctItem}%"></div></div>
     `;
     els.dashboardNongwaList.appendChild(div);
   });
@@ -343,6 +378,9 @@ function renderCourseList() {
     if (categoryValue !== 'all' && c.category !== categoryValue) return false;
     if (statusValue === 'none' && c.status) return false;
     if (statusValue !== 'all' && statusValue !== 'none' && c.status !== statusValue) return false;
+    // Asking for completed courses explicitly beats the blanket hide, so the
+    // toggle can never leave you staring at an empty list you just filtered to.
+    if (viewPrefs.hideCompleted && c.status === 'completed' && statusValue !== 'completed') return false;
     return true;
   });
 
@@ -424,15 +462,47 @@ function renderByCategory(list) {
   [...byCategory.keys()]
     .sort((a, b) => rank(a) - rank(b))
     .forEach((category) => {
-      els.courseList.appendChild(buildCategoryHeading(category));
-      byCategory.get(category).forEach((course) => {
-        els.courseList.appendChild(buildCourseRow(course));
+      // <details> rather than a hand-rolled toggle: the open/closed state,
+      // keyboard access and screen-reader semantics all come for free.
+      const section = document.createElement('details');
+      section.className = 'course-category';
+      section.open = !viewPrefs.collapsed.includes(category);
+
+      section.appendChild(buildCategoryHeading(category));
+
+      const body = document.createElement('div');
+      body.className = 'course-category-body';
+      byCategory.get(category).forEach((course) => body.appendChild(buildCourseRow(course)));
+      section.appendChild(body);
+
+      section.addEventListener('toggle', () => {
+        // `toggle` fires asynchronously, so events queued against a section
+        // the list has since rebuilt — including the ones the print pass
+        // provokes by forcing every section open — arrive after that section
+        // is detached. Acting on them would overwrite the real state with a
+        // snapshot of a list that no longer exists.
+        if (!section.isConnected) return;
+
+        const collapsed = new Set(viewPrefs.collapsed);
+        if (section.open) collapsed.delete(category);
+        else collapsed.add(category);
+
+        // Re-rendering re-opens every expanded section, so most of these
+        // events change nothing; only write when the set actually moved.
+        const next = [...collapsed];
+        if (next.length === viewPrefs.collapsed.length
+            && next.every((c) => viewPrefs.collapsed.includes(c))) return;
+
+        viewPrefs.collapsed = next;
+        saveViewPrefs();
       });
+
+      els.courseList.appendChild(section);
     });
 }
 
 function buildCategoryHeading(category) {
-  const heading = document.createElement('div');
+  const heading = document.createElement('summary');
   heading.className = 'course-category-heading course-category-heading-sub';
 
   const name = document.createElement('span');
@@ -530,17 +600,34 @@ function buildPrereqLine(course) {
 
 function buildCourseRow(course) {
   const row = document.createElement('div');
-  row.className = 'course-row';
+  // The row carries its own status so the whole card can respond, not just
+  // the dropdown — a completed course should *look* dealt with.
+  row.className = `course-row is-${course.status || 'none'}`;
   row.style.setProperty('--group-color', `var(--color-${GROUP_SLUG[course.group]})`);
 
   const main = document.createElement('div');
   main.className = 'course-row-main';
 
   const codeLine = document.createElement('div');
+  codeLine.className = 'course-code-line';
   const codeSpan = document.createElement('span');
   codeSpan.className = 'course-code';
   codeSpan.textContent = course.code;
   codeLine.appendChild(codeSpan);
+
+  // Units sit with the code rather than out in the middle of the row: they
+  // are part of what the course *is*, not a separate column to scan.
+  const units = document.createElement('span');
+  units.className = 'course-units';
+  units.textContent = `${course.units}u`;
+  codeLine.appendChild(units);
+  if (course.unverifiedUnits) {
+    const flag = document.createElement('span');
+    flag.className = 'unverified-flag';
+    flag.title = 'Unit count not published; assumed';
+    flag.textContent = '(unverified)';
+    codeLine.appendChild(flag);
+  }
 
   const titleLine = document.createElement('div');
   titleLine.className = 'course-title';
@@ -557,10 +644,6 @@ function buildCourseRow(course) {
 
   const prereqLine = buildPrereqLine(course);
   if (prereqLine) main.appendChild(prereqLine);
-
-  const units = document.createElement('div');
-  units.className = 'course-units';
-  units.innerHTML = `${course.units}u${course.unverifiedUnits ? ' <span class="unverified-flag" title="Unit count not published; assumed">(unverified)</span>' : ''}`;
 
   const statusSelect = document.createElement('select');
   ['', 'planned', 'in-progress', 'completed'].forEach((s) => {
@@ -591,6 +674,7 @@ function buildCourseRow(course) {
     }
 
     statusSelect.className = `status-${course.status || 'none'}`;
+    row.className = `course-row is-${course.status || 'none'}`;
     saveCourses();
     renderDashboard();
     renderTermSummary();
@@ -629,11 +713,18 @@ function buildCourseRow(course) {
     renderCourseList();
   });
 
-  row.append(main, units, statusSelect, termInput);
+  row.append(main, statusSelect, termInput);
   return row;
 }
 
 [els.categoryFilter, els.statusFilter].forEach((el) => el.addEventListener('change', renderCourseList));
+
+els.hideCompleted.checked = viewPrefs.hideCompleted;
+els.hideCompleted.addEventListener('change', () => {
+  viewPrefs.hideCompleted = els.hideCompleted.checked;
+  saveViewPrefs();
+  renderCourseList();
+});
 
 
 /* ---------- CSV export ---------- */
@@ -652,13 +743,45 @@ function csvEscape(value) {
 
 /* ---------- PDF export (browser print → "Save as PDF") ---------- */
 
+/* Printing renders the DOM as it stands, but filters, "Hide completed" and a
+   collapsed category all remove courses from it. A Plan of Study that quietly
+   omits half the degree is worse than no export, so the full list is restored
+   for the duration of the print and the student's view is put back after. */
+
+function withFullListForPrint(print) {
+  const saved = {
+    category: els.categoryFilter.value,
+    status: els.statusFilter.value,
+    hideCompleted: viewPrefs.hideCompleted,
+  };
+
+  els.categoryFilter.value = 'all';
+  els.statusFilter.value = 'all';
+  viewPrefs.hideCompleted = false;
+  renderCourseList();
+  // Opened after the render, since renderCourseList rebuilds each section
+  // from the saved collapsed list.
+  document.querySelectorAll('details.course-category').forEach((d) => { d.open = true; });
+
+  try {
+    print();
+  } finally {
+    els.categoryFilter.value = saved.category;
+    els.statusFilter.value = saved.status;
+    viewPrefs.hideCompleted = saved.hideCompleted;
+    // Rebuilds the list from the saved preferences, which also detaches the
+    // forced-open sections so their pending toggle events are ignored.
+    renderCourseList();
+  }
+}
+
 els.exportPdfBtn.addEventListener('click', () => {
   const { totalCompleted } = computeDashboard();
   els.printHeader.innerHTML = `
     <h1>BAMS Plan of Study</h1>
     <p>${totalCompleted} / ${TOTAL_UNITS_REQUIRED} units completed — generated ${new Date().toLocaleDateString()}</p>
   `;
-  window.print();
+  withFullListForPrint(() => window.print());
 });
 
 /* ---------- Helpers ---------- */
