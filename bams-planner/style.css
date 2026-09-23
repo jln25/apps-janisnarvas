@@ -21,11 +21,14 @@
   --color-production: #d97706;
   --color-capstone: #dc2626;
 
-  --color-planned: #94a3b8;
+  /* Foregrounds are darker than the usual mid-tone of each hue because they
+     are drawn on their own tinted background, not on white. The original
+     mid-tones measured 2.3–3.3:1 against these tints; these clear 6:1. */
+  --color-planned: #475569;
   --color-planned-bg: #f1f5f9;
-  --color-in-progress: #d97706;
+  --color-in-progress: #92400e;
   --color-in-progress-bg: #fef3c7;
-  --color-completed: #059669;
+  --color-completed: #065f46;
   --color-completed-bg: #d1fae5;
 
   --color-on-primary: #ffffff;
@@ -202,6 +205,11 @@ main {
   height: 10px;
 }
 
+/* A category you have not started yet still needs a track — it is what makes
+   the card legible as a progress card — but it should not carry the same
+   visual weight as one that is actually moving. */
+.progress-bar.is-empty { opacity: 0.4; }
+
 .progress-bar-lg { height: 14px; margin-bottom: 24px; }
 
 .progress-bar-fill {
@@ -211,11 +219,18 @@ main {
   transition: width 0.3s ease;
 }
 
+/* Pinned to three columns rather than auto-fit: with six categories, auto-fit
+   lands on four-plus-two at some widths and orphans the last row. Three and
+   two both divide six evenly. */
 .dashboard-groups {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 20px;
+}
+
+@media (max-width: 700px) {
+  .dashboard-groups { grid-template-columns: repeat(2, 1fr); }
 }
 
 .dashboard-group-card {
@@ -265,6 +280,19 @@ main {
   margin-bottom: 14px;
 }
 
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label:hover { color: var(--color-text); }
+.checkbox-label input { accent-color: var(--color-primary); cursor: pointer; }
+
 .list-controls select {
   font-family: inherit;
   font-size: 0.88rem;
@@ -308,10 +336,50 @@ main {
 
 .course-category-heading:first-child { margin-top: 0; }
 
+/* ---------- Collapsible category sections ----------
+   Each category is a <details>, so open/closed state, keyboard operation and
+   screen-reader semantics come from the element rather than from script. */
+
+.course-category {
+  display: flex;
+  flex-direction: column;
+}
+
+.course-category-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* The default triangle is replaced by a chevron that rotates, so the control
+   matches the rest of the page rather than the browser's own furniture. */
+.course-category-heading-sub::-webkit-details-marker { display: none; }
+.course-category-heading-sub { list-style: none; }
+
+.course-category-heading-sub::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+  flex: 0 0 auto;
+  margin-right: 2px;
+}
+
+.course-category[open] > .course-category-heading-sub::before {
+  transform: rotate(45deg);
+}
+
+.course-category-heading-sub:hover { opacity: 1; }
+
 /* Category headings nested inside the unassigned pool. Indented behind a rule
    and set smaller than a term heading, so the hierarchy is readable at a
    glance: term > category > course. */
 .course-category-heading-sub {
+  cursor: pointer;
+  user-select: none;
   margin: 16px 0 2px;
   padding-left: 11px;
   border-left: 2px solid var(--color-border);
@@ -337,14 +405,27 @@ main {
   min-width: 0;
 }
 
+/* Code, units and any flag share a baseline row, so the units read as part of
+   the course identity instead of floating in the middle of the card. */
+.course-code-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Opened up from 0.88/0.85rem: the old pair were close enough in size that
+   neither read as the primary line. */
 .course-code {
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
 }
 
 .course-title {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--color-text-muted);
+  margin-top: 1px;
 }
 
 .course-note {
@@ -394,8 +475,12 @@ main {
 .page-notice a { color: var(--color-primary); }
 
 .course-units {
-  font-size: 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 600;
   color: var(--color-text-muted);
+  background: var(--color-bg);
+  border-radius: 999px;
+  padding: 2px 8px;
   flex: 0 0 auto;
 }
 
@@ -418,10 +503,61 @@ main {
 .course-row select { flex: 0 0 140px; }
 .course-row input[type="text"] { flex: 0 0 130px; }
 
-.status-none { color: var(--color-text-muted); }
-.status-planned { color: var(--color-planned); }
-.status-in-progress { color: var(--color-in-progress); }
-.status-completed { color: var(--color-completed); }
+/* ---------- Status ----------
+   These were previously written as `.status-*` alone, which lost on
+   specificity to `.course-row select` and so never rendered at all. Scoping
+   them to the select both fixes that and lets the control read as a status
+   pill rather than one more grey dropdown. */
+
+.course-row select.status-none { color: var(--color-text-muted); }
+
+.course-row select.status-planned,
+.course-row select.status-in-progress,
+.course-row select.status-completed {
+  font-weight: 600;
+}
+
+.course-row select.status-planned {
+  color: var(--color-planned);
+  background: var(--color-planned-bg);
+  border-color: var(--color-planned);
+}
+
+.course-row select.status-in-progress {
+  color: var(--color-in-progress);
+  background: var(--color-in-progress-bg);
+  border-color: var(--color-in-progress);
+}
+
+.course-row select.status-completed {
+  color: var(--color-completed);
+  background: var(--color-completed-bg);
+  border-color: var(--color-completed);
+}
+
+/* ---------- Completed courses ----------
+   A passed course is settled business. It stays readable and editable, but
+   recedes so the eye lands on what still needs deciding. The left edge takes
+   the completion colour, overriding the category stripe: once a course is
+   done, "finished" matters more than which bucket it came from. */
+.course-row.is-completed {
+  border-left-color: var(--color-completed);
+  background: transparent;
+}
+
+.course-row.is-completed .course-code {
+  color: var(--color-text-muted);
+}
+
+.course-row.is-completed .course-title,
+.course-row.is-completed .course-note,
+.course-row.is-completed .course-prereq {
+  opacity: 0.6;
+}
+
+.course-row.is-in-progress {
+  border-left-color: var(--color-in-progress);
+}
 
 /* ---------- Print ---------- */
 
@@ -444,11 +580,11 @@ main {
     --color-major: #0d9488;
     --color-production: #d97706;
     --color-capstone: #dc2626;
-    --color-planned: #94a3b8;
+    --color-planned: #475569;
     --color-planned-bg: #f1f5f9;
-    --color-in-progress: #d97706;
+    --color-in-progress: #92400e;
     --color-in-progress-bg: #fef3c7;
-    --color-completed: #059669;
+    --color-completed: #065f46;
     --color-completed-bg: #d1fae5;
     --color-input-bg: #ffffff;
     --shadow: none;
