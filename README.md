@@ -30,38 +30,6 @@ reading-notebook/   + zip.js, a small hand-rolled ZIP writer for the Markdown ex
 bams-planner/       + courses.js (the curriculum) and guide.html (the user guide)
 ```
 
-## Running it locally
-
-No dependencies to install. Serve the folder over HTTP rather than opening the
-files directly, so that `localStorage` behaves the way it does in production:
-
-```bash
-python3 -m http.server 8000
-```
-
-Then open <http://localhost:8000>.
-
-## One convention worth knowing
-
-Every asset URL carries a version string — `style.css?v=1.7.0`, and so on, the
-same number across all of them.
-
-**Bump it in every file whenever you change a `.css` or `.js` file.** The host
-serves stylesheets and images with a seven-day `max-age` and sends no
-`cache-control` at all on scripts and HTML, so without a new URL a returning
-visitor will pair new markup with a stale script for days. That failure is
-silent and looks like a bug in the app.
-
-```bash
-grep -rl '?v=1.7.0' --include='*.html' --include='*.js' --include='*.xml' . \
-  | xargs sed -i '' 's/?v=1\.7\.0/?v=1.8.0/g'
-```
-
-## Deployment
-
-Static files uploaded to cPanel. The repository is the source of truth; the
-`.zip` archives built for uploading are gitignored.
-
 ## Licence
 
 Code under the [MIT License](LICENSE). The writing and design under
