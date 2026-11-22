@@ -94,7 +94,7 @@
     mit.textContent = 'MIT License';
 
     [
-      ['Code for three tools under the ', mit],
+      ['Code under the ', mit],
       ['Writing and design under ', externalLink(CC_DEED, 'CC BY 4.0')],
       [externalLink(REPO, 'Source on GitHub')],
     ].forEach((parts) => {
