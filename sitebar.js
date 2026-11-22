@@ -6,9 +6,6 @@
    copyright, the contact icons and the licensing line only exist once.
    `data-root-prefix` lets pages inside a subfolder reach back up to
    license.html and the icons.
-
-   Layout follows the footer on copy-cat: a coloured band with the credit on
-   the left and the social icons on the right, and the licence line beneath.
    ========================================================================== */
 
 (() => {
