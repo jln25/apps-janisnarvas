@@ -4,42 +4,55 @@
    ========================================================================== */
 
 :root {
-  --color-primary: #1e73be;
-  --color-accent: #0d9488;
+  --color-primary: #50ebec;
+  --color-accent: #30A8B9;
 
-  /* Call-to-action button. Deliberately the same cyan in both themes: it is
-     bright enough to read on the light and the dark background alike.
-     Its label is near-black rather than white — white on this cyan is only
-     1.6:1, which fails WCAG AA, while the dark label reaches about 9.6:1. */
-  --color-cta: #49e3e4;
-  --color-cta-hover: #2ed3d4;
-  --color-cta-text: #0a2b2e;
-  --color-bg: #f9f9f5;
-  --color-surface: #ffffff;
-  --color-border: #e5e5e0;
-  --color-text: #1c1c1c;
-  --color-text-muted: #4d4d4d;
-  --radius: 14px;
-  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+  /* Call-to-action button: the palette's Primary, the same in both themes
+     since it carries on the cream and on the dark background alike. Its
+     label is Text Primary, never white — white on this cyan is 1.45:1,
+     which fails AA outright, while #1A1A1A reaches 11.96:1. */
+  --color-cta: var(--color-primary);
+  --color-cta-hover: var(--color-accent);
+  --color-cta-text: #1A1A1A;
+  --color-bg: #FFF8F0;
+  --color-surface: #FFFFFF;
+  --color-border: #E0D5C7;
+  --color-text: #1A1A1A;
+  --color-text-muted: #6B6B6B;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   /* Footer bar: a dark block in both themes, so it reads as a base rail. */
-  --color-bar-bg: #1c1c1c;
-  --color-bar-text: #f2f2ec;
+  --color-bar-bg: #36a8a8;   /* teal band; #1a1a1a on it = 6.1:1 */
+  --color-bar-text: #1a1a1a;
+  /* Secondary, deepened until it passes AA as body-sized link text on the
+     cream background: the palette's own accents top out at 2.7:1 there. */
+  --color-link: #1D6B77;
+  --radius-sm: 4px;      /* inputs, chips */
+  --radius-lg: 24px;     /* modals, containers */
+  --radius-full: 9999px; /* pills, avatars */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* ---------- Dark theme ----------
    theme.js sets data-theme on <html>, defaulting to the OS preference. */
 :root[data-theme="dark"] {
-  --color-primary: #58a6f0;
-  --color-accent: #2dd4bf;
-  --color-bg: #1a1a17;
-  --color-surface: #232320;
-  --color-border: #35352f;
-  --color-text: #f2f2ec;
-  --color-text-muted: #a5a59c;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
-  --color-bar-bg: #100f0e;
+  --color-primary: #50ebec;
+  --color-accent: #30A8B9;
+  --color-bg: #1A1714;
+  --color-surface: #242019;
+  --color-border: #3A332A;
+  --color-text: #F5EFE6;
+  --color-text-muted: #A79E92;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --color-bar-bg: #234242;   /* muted teal; light text on it = 9.4:1 */
   --color-bar-text: #e6e3dc;
+  /* On the dark background the Primary cyan clears 12:1, so links can use
+     it directly rather than the deepened light-mode teal. */
+  --color-link: #50ebec;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
 * { box-sizing: border-box; }
@@ -140,17 +153,6 @@ main {
   margin: 0;
 }
 
-.site-footer {
-  text-align: center;
-  padding: 24px;
-  font-size: 0.82rem;
-  color: var(--color-text-muted);
-}
-
-.site-footer p { margin: 0 0 4px; }
-.site-footer p:last-child { margin-bottom: 0; }
-.site-footer a { color: var(--color-primary); }
-
 @media (max-width: 500px) {
   .intro h1 { font-size: 1.5rem; }
 }
@@ -167,20 +169,23 @@ main {
   line-height: 1;
   cursor: pointer;
 }
-.theme-toggle:hover { color: var(--color-primary); border-color: var(--color-primary); }
+.theme-toggle:hover { color: var(--color-link); border-color: var(--color-primary); }
 
 /* ---------- Shared version / copyright bar ---------- */
 
 .site-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px 14px;
-  padding: 14px 24px;
   background: var(--color-bar-bg);
   color: var(--color-bar-text);
   font-size: 0.78rem;
+  padding: 20px 24px;
+}
+
+.site-bar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .site-bar a {
@@ -190,10 +195,64 @@ main {
 }
 .site-bar a:hover { opacity: 0.75; }
 
-.site-bar-license {
-  max-width: 760px;
-  line-height: 1.6;
-  text-align: center;
+/* Credit on the left, contact icons on the right. */
+.site-bar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-bar-credit { margin: 0; line-height: 1.6; }
+/* Keeps the place name from breaking across lines mid-phrase. */
+.site-bar-place { white-space: nowrap; }
+
+/* The copyright and the place sit on their own lines, as two statements
+   rather than one run-on sentence. */
+.site-bar-place { display: block; }
+
+.site-bar-terms {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+.site-bar-terms li { margin: 0; }
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: none;
+}
+
+.social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* A comfortable touch target around a 20px icon. */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  text-decoration: none;
+}
+.social a:hover { background: rgba(0, 0, 0, 0.12); opacity: 1; }
+.social img { display: block; width: 20px; height: 20px; }
+
+/* The icons are dark glyphs, which read on the light teal. On the muted dark
+   teal they are inverted to white instead. */
+:root[data-theme="dark"] .social img { filter: invert(1); }
+:root[data-theme="dark"] .social a:hover { background: rgba(255, 255, 255, 0.12); }
+
+@media (max-width: 600px) {
+  .site-bar-row { gap: 12px; }
+  .site-bar-credit { flex: 1; min-width: 0; }
+  /* Hold the icons to one row of three beside the credit. */
+  .social { justify-content: flex-end; max-width: calc(3 * 40px + 2 * 4px); }
+  .social a { width: 40px; height: 40px; }
 }
 
 
@@ -225,12 +284,12 @@ main {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-primary);
+  color: var(--color-link);
   margin: 0 0 10px;
 }
 
 .prose p { line-height: 1.7; margin: 0 0 14px; }
-.prose a { color: var(--color-primary); }
+.prose a { color: var(--color-link); }
 
 /* The licence text is quoted verbatim, so it keeps its own line breaks and
    scrolls sideways on narrow screens rather than reflowing. */

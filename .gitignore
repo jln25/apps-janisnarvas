@@ -3,3 +3,9 @@
 # Deploy archives built for uploading to cPanel — the repo is the source of
 # truth, so the zips it produces do not belong back inside it.
 *.zip
+
+# Local editor/preview config, not part of the site.
+.claude/
+
+# Another project, kept here only as a local reference.
+copy-cat/

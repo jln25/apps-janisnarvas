@@ -7,9 +7,9 @@
    ========================================================================== */
 
 :root {
-  --color-primary: #1e73be;
+  --color-primary: #50ebec;
   --color-primary-hover: #185f9c;
-  --color-accent: #0d9488;
+  --color-accent: #30A8B9;
 
   --color-not-started: #64748b;
   --color-not-started-bg: #f1f5f9;
@@ -35,25 +35,36 @@
   --color-priority-low: #64748b;
   --color-priority-low-bg: #f1f5f9;
 
-  --color-bg: #f9f9f5;
-  --color-surface: #ffffff;
-  --color-border: #e5e5e0;
-  --color-text: #1c1c1c;
-  --color-text-muted: #4d4d4d;
+  --color-bg: #FFF8F0;
+  --color-surface: #FFFFFF;
+  --color-border: #E0D5C7;
+  --color-text: #1A1A1A;
+  --color-text-muted: #6B6B6B;
 
   --color-danger: #dc2626;
   --color-danger-border: #fecaca;
   --color-danger-hover-bg: #fef2f2;
-  --color-on-primary: #ffffff;
+  --color-on-primary: #1A1A1A;
   --color-overlay: rgba(15, 23, 42, 0.45);
 
-  --radius: 10px;
-  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.06);
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.12);
 
   /* Footer bar: a dark block in both themes, so it reads as a base rail. */
-  --color-bar-bg: #1c1c1c;
-  --color-bar-text: #f2f2ec;
+  --banner-from: #217582;    /* secondary */
+  --banner-to: #185861;      /* deeper secondary; white on it = 9.9:1 */
+  --on-banner: #ffffff;      /* 5.3:1 at the gradient's lightest end */
+  --color-bar-bg: #36a8a8;   /* teal band; #1a1a1a on it = 6.1:1 */
+  --color-bar-text: #1a1a1a;
+  /* Secondary, deepened until it passes AA as body-sized link text on the
+     cream background: the palette's own accents top out at 2.7:1 there. */
+  --color-link: #1D6B77;
+  --radius-sm: 4px;      /* inputs, chips */
+  --radius-lg: 24px;     /* modals, containers */
+  --radius-full: 9999px; /* pills, avatars */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* ---------- Dark theme ----------
@@ -62,9 +73,9 @@
    become deep desaturated versions rather than the light pastels, which
    would otherwise turn muddy. */
 :root[data-theme="dark"] {
-  --color-primary: #58a6f0;
+  --color-primary: #50ebec;
   --color-primary-hover: #7bb8f5;
-  --color-accent: #2dd4bf;
+  --color-accent: #30A8B9;
 
   --color-not-started: #94a3b8;
   --color-not-started-bg: #2a2f36;
@@ -90,22 +101,30 @@
   --color-priority-low: #94a3b8;
   --color-priority-low-bg: #2a2f36;
 
-  --color-bg: #1a1a17;
-  --color-surface: #232320;
-  --color-border: #35352f;
-  --color-text: #f2f2ec;
-  --color-text-muted: #a5a59c;
+  --color-bg: #1A1714;
+  --color-surface: #242019;
+  --color-border: #3A332A;
+  --color-text: #F5EFE6;
+  --color-text-muted: #A79E92;
 
   --color-danger: #f87171;
   --color-danger-border: #5b2626;
   --color-danger-hover-bg: #3a1c1c;
-  --color-on-primary: #10233a;
+  --color-on-primary: #1A1A1A;
   --color-overlay: rgba(0, 0, 0, 0.65);
 
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
-  --color-bar-bg: #100f0e;
+  --banner-from: #2b5050;    /* muted teal; light text on it = 7.6:1 */
+  --banner-to: #1a3333;
+  --on-banner: #f2f2ec;
+  --color-bar-bg: #234242;   /* muted teal; light text on it = 9.4:1 */
   --color-bar-text: #e6e3dc;
+  /* On the dark background the Primary cyan clears 12:1, so links can use
+     it directly rather than the deepened light-mode teal. */
+  --color-link: #50ebec;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
 * { box-sizing: border-box; }
@@ -149,7 +168,7 @@ body {
   text-decoration: none;
   white-space: nowrap;
 }
-.home-link:hover { color: var(--color-primary); }
+.home-link:hover { color: var(--color-link); }
 
 .theme-toggle {
   width: 34px;
@@ -163,7 +182,7 @@ body {
   line-height: 1;
   cursor: pointer;
 }
-.theme-toggle:hover { color: var(--color-primary); border-color: var(--color-primary); }
+.theme-toggle:hover { color: var(--color-link); border-color: var(--color-primary); }
 
 .view-toggle {
   display: inline-flex;
@@ -186,7 +205,7 @@ body {
 
 .toggle-btn.active {
   background: var(--color-surface);
-  color: var(--color-primary);
+  color: var(--color-link);
   box-shadow: var(--shadow);
 }
 
@@ -613,16 +632,64 @@ main {
 
 /* ---------- Shared version / copyright bar ---------- */
 
-.site-bar {
+
+/* ---------- Tool banner ----------
+   Names the tool, in the same shape as the banner on copy-cat: a gradient
+   band carrying the page's H1 and a one-line description. The H1 lives here
+   rather than in the header bar, so the page has one obvious title. */
+
+.tool-banner {
+  background: linear-gradient(135deg, var(--banner-from), var(--banner-to));
+  color: var(--on-banner);
+  /* The tools below start flush against their containers, so the breathing
+     room between the banner and the first control has to come from here. */
+  margin-bottom: 28px;
+}
+
+.tool-banner-inner {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px 14px;
-  padding: 14px 24px;
+  gap: 10px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.tool-banner h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.tool-banner .tool-desc {
+  margin: 0;
+  max-width: 620px;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+@media (max-width: 600px) {
+  .tool-banner-inner { padding: 28px 16px; }
+  .tool-banner h1 { font-size: 1.6rem; }
+  .tool-banner .tool-desc { font-size: 0.92rem; }
+}
+
+.site-bar {
   background: var(--color-bar-bg);
   color: var(--color-bar-text);
   font-size: 0.78rem;
+  padding: 20px 24px;
+}
+
+.site-bar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .site-bar a {
@@ -632,7 +699,62 @@ main {
 }
 .site-bar a:hover { opacity: 0.75; }
 
-.site-bar-version {
-  opacity: 0.6;
-  font-variant-numeric: tabular-nums;
+/* Credit on the left, contact icons on the right. */
+.site-bar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.site-bar-credit { margin: 0; line-height: 1.6; }
+/* Keeps the place name from breaking across lines mid-phrase. */
+.site-bar-place { white-space: nowrap; }
+
+/* The copyright and the place sit on their own lines, as two statements
+   rather than one run-on sentence. */
+.site-bar-place { display: block; }
+
+.site-bar-terms {
+  margin: 0;
+  padding-left: 18px;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+.site-bar-terms li { margin: 0; }
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: none;
+}
+
+.social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* A comfortable touch target around a 20px icon. */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  text-decoration: none;
+}
+.social a:hover { background: rgba(0, 0, 0, 0.12); opacity: 1; }
+.social img { display: block; width: 20px; height: 20px; }
+
+/* The icons are dark glyphs, which read on the light teal. On the muted dark
+   teal they are inverted to white instead. */
+:root[data-theme="dark"] .social img { filter: invert(1); }
+:root[data-theme="dark"] .social a:hover { background: rgba(255, 255, 255, 0.12); }
+
+@media (max-width: 600px) {
+  .site-bar-row { gap: 12px; }
+  .site-bar-credit { flex: 1; min-width: 0; }
+  /* Hold the icons to one row of three beside the credit. */
+  .social { justify-content: flex-end; max-width: calc(3 * 40px + 2 * 4px); }
+  .social a { width: 40px; height: 40px; }
 }

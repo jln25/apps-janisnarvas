@@ -49,23 +49,22 @@
   }
 }
 </script>
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=1.6.0">
-<link rel="icon" type="image/png" sizes="512x512" href="../favicon-512.png?v=1.6.0">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png?v=1.6.0">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=2.1.0">
+<link rel="icon" type="image/png" sizes="512x512" href="../favicon-512.png?v=2.1.0">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2.1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=1.6.0">
+<link rel="stylesheet" href="style.css?v=2.1.0">
 <!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
-<script src="../theme.js?v=1.6.0"></script>
+<script src="../theme.js?v=2.1.0"></script>
 <!-- Google Analytics (GA4) -->
-<script src="../analytics.js?v=1.6.0"></script>
+<script src="../analytics.js?v=2.1.0"></script>
 </head>
 <body>
 
 <header class="app-header">
   <a href="../" class="home-link" aria-label="Back to all tools">&larr; All tools</a>
-  <h1 class="app-title">Study Tracker</h1>
 
   <button type="button" id="add-task-btn" class="btn btn-primary btn-lg">+ Add Task</button>
 
@@ -76,6 +75,14 @@
 
   <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">☾</button>
 </header>
+
+<!-- Names the tool; the page's H1 lives here. -->
+<section class="tool-banner">
+  <div class="tool-banner-inner">
+    <h1>Study Tracker</h1>
+    <p class="tool-desc">Track assignments and deadlines in a calendar or list view.</p>
+  </div>
+</section>
 
 <div class="controls-bar">
   <input type="search" id="search-input" placeholder="Search by name or course…" aria-label="Search tasks">
@@ -214,7 +221,7 @@
 <!-- Licensing bar, filled in by sitebar.js. -->
 <footer class="site-bar" data-root-prefix="../"></footer>
 
-<script src="script.js?v=1.6.0"></script>
-<script src="../sitebar.js?v=1.6.0"></script>
+<script src="script.js?v=2.1.0"></script>
+<script src="../sitebar.js?v=2.1.0"></script>
 </body>
 </html>
