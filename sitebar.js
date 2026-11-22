@@ -19,7 +19,7 @@
   const SITE = 'https://janisnarvas.com';
 
   // Bumped with the rest of the site's assets; see the README.
-  const ASSET_V = '2.1.0';
+  const ASSET_V = '2.2.0';
 
   const SOCIALS = [
     { href: 'mailto:jlnarvas2@up.edu.ph', icon: 'email.png', label: 'Email' },
@@ -44,7 +44,10 @@
     credit.className = 'site-bar-credit';
     const name = document.createElement('a');
     
-    // Its own line under the copyright, rather than running on after it.
+    name.href = SITE;
+    name.textContent = 'Janis Narvas';
+    credit.appendChild(name);
+
     const place = document.createElement('span');
     place.className = 'site-bar-place';
     place.textContent = 'Designed in Los Baños, Laguna ♡';
@@ -91,7 +94,7 @@
     mit.textContent = 'MIT License';
 
     [
-      ['Code under the ', mit],
+      ['Code (except Copy Cat) under the ', mit],
       ['Writing and design under ', externalLink(CC_DEED, 'CC BY 4.0')],
       [externalLink(REPO, 'Source on GitHub')],
     ].forEach((parts) => {

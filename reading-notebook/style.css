@@ -118,7 +118,13 @@ body {
   gap: 14px;
   position: sticky;
   top: 0;
-  height: 100vh;
+  /* Stretches to the shell rather than a flat 100vh. With the banner above
+     it, a hard 100vh started below the fold and pushed the export buttons
+     off the bottom of the screen; this keeps the whole column in view, and
+     the sticky top still gives it the full height once the banner scrolls
+     away. */
+  align-self: stretch;
+  max-height: 100vh;
   overflow-y: auto;
 }
 
@@ -138,11 +144,17 @@ body {
 }
 .home-link:hover { color: var(--color-link); }
 
-.sidebar-top {
+/* Matches the header on the other two tools, so all three open with the same
+   row: navigation first, then the banner, then the tool itself. */
+.app-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 20px 24px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .theme-toggle {

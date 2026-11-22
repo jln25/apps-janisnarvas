@@ -113,10 +113,16 @@ main {
   margin: 0;
 }
 
+/* Two up on desktop rather than auto-fit: with four tools that gives a square
+   2x2 block, where auto-fit was fitting three across and orphaning the last. */
 .tool-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 640px) {
+  .tool-grid { grid-template-columns: 1fr; }
 }
 
 .tool-card {
