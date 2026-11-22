@@ -26,7 +26,7 @@ const TOOLS = [
   {
     name: 'Copy Cat',
     description: 'Easy copy checker tool for UX and SEO writers',
-    path: 'https://github.com/jln25/copy-cat',
+    path: 'copy-cat/',
     icon: '🐈',
   },
 ];
