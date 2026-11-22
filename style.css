@@ -93,8 +93,15 @@ main {
   flex: 1;
   max-width: 900px;
   margin: 0 auto;
-  padding: 40px 24px;
   width: 100%;
+/* Force the main section to fill 100% of the visible screen height */
+  min-height: 100vh;
+  min-height: 100dvh; /* Accounts for mobile browser address bars */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Vertically centers your title + 4 cards */
+  box-sizing: border-box;
+  padding: 4rem 1.5rem; /* Ensures breathing room on smaller screens */
 }
 
 .intro {
