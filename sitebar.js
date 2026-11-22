@@ -43,10 +43,7 @@
     const credit = document.createElement('p');
     credit.className = 'site-bar-credit';
     const name = document.createElement('a');
-    name.href = SITE;
-    name.textContent = 'Janis Narvas';
-    credit.append('© 2026 by ', name, '. All rights reserved. ');
-
+    
     // Its own line under the copyright, rather than running on after it.
     const place = document.createElement('span');
     place.className = 'site-bar-place';
