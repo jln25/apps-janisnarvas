@@ -494,6 +494,11 @@ main {
   .site-nav-inner { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
   .site-nav-toggle { display: flex; }
 
+  /* The links drop into the panel below, so the auto margin they carry on
+     desktop stops pushing anything. The controls take it here instead, which
+     puts the theme switch and the hamburger against the right edge. */
+  .site-nav-actions { margin-left: auto; }
+
   /* Closed: the panel is out of the layout entirely, not just invisible. */
   .site-nav-links {
     display: none;
