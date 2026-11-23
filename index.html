@@ -13,11 +13,11 @@
 <meta property="og:title" content="Janis Narvas | Apps">
 <meta property="og:description" content="Free study tools for students: an assignment tracker with calendar view, a tag-based reading notebook that exports to Obsidian, and a UPOU BAMS degree planner. No login required and your data stays in your browser.">
 <meta property="og:url" content="https://apps.janisnarvas.com/">
-<meta property="og:image" content="https://apps.janisnarvas.com/og-image.png">
+<meta property="og:image" content="https://apps.janisnarvas.com/icons/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Janis Narvas | Apps">
 <meta name="twitter:description" content="Free study tools for students: an assignment tracker with calendar view, a tag-based reading notebook that exports to Obsidian, and a UPOU BAMS degree planner. No login required and your data stays in your browser.">
-<meta name="twitter:image" content="https://apps.janisnarvas.com/og-image.png">
+<meta name="twitter:image" content="https://apps.janisnarvas.com/icons/og-image.png">
 
 <!-- Structured data -->
 <script type="application/ld+json">
@@ -63,30 +63,32 @@
   ]
 }
 </script>
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2.2.0">
-<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png?v=2.2.0">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2.2.0">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=3.2.0">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/favicon-512.png?v=3.2.0">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=3.2.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=2.2.0">
+<link rel="stylesheet" href="style.css?v=3.2.0">
 <!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
-<script src="theme.js?v=2.2.0"></script>
+<script src="theme.js?v=3.2.0"></script>
 <!-- Google Analytics (GA4) -->
-<script src="analytics.js?v=2.2.0"></script>
+<script src="analytics.js?v=3.2.0"></script>
 </head>
 <body>
 
-<header class="site-header">
-  <a href="./" class="site-home" title="Study Apps — home" aria-label="Study Apps — home">🏠</a>
-  <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">&#9790;</button>
-</header>
+<!-- Sticky navigation, filled in by nav.js. -->
+<nav class="site-nav"></nav>
+
+<!-- Names the page; its H1 lives here. -->
+<section class="tool-banner">
+  <div class="tool-banner-inner">
+    <h1>Apps</h1>
+    <p class="tool-desc">A small collection of personal tools</p>
+  </div>
+</section>
 
 <main>
-  <section class="intro">
-    <h1>A small collection of personal tools</h1>
-    <p>Standalone web apps, no login required. Data stays in your browser.</p>
-  </section>
 
   <!--
     Each tool is a card driven by the TOOLS array in script.js.
@@ -98,7 +100,8 @@
 <!-- Licensing bar, filled in by sitebar.js. -->
 <footer class="site-bar"></footer>
 
-<script src="script.js?v=2.2.0"></script>
-<script src="sitebar.js?v=2.2.0"></script>
+<script src="script.js?v=3.2.0"></script>
+<script src="nav.js?v=3.2.0"></script>
+<script src="sitebar.js?v=3.2.0"></script>
 </body>
 </html>

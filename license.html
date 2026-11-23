@@ -13,30 +13,35 @@
 <meta property="og:title" content="Janis Narvas | License">
 <meta property="og:description" content="Licensing for the Study Apps tools: the code is MIT licensed, the writing and design are CC BY 4.0, and the UPOU BAMS curriculum data belongs to the university.">
 <meta property="og:url" content="https://apps.janisnarvas.com/license.html">
-<meta property="og:image" content="https://apps.janisnarvas.com/og-image.png">
+<meta property="og:image" content="https://apps.janisnarvas.com/icons/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2.2.0">
-<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png?v=2.2.0">
-<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2.2.0">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png?v=3.2.0">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/favicon-512.png?v=3.2.0">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png?v=3.2.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=2.2.0">
+<link rel="stylesheet" href="style.css?v=3.2.0">
 <!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
-<script src="theme.js?v=2.2.0"></script>
+<script src="theme.js?v=3.2.0"></script>
 <!-- Google Analytics (GA4) -->
-<script src="analytics.js?v=2.2.0"></script>
+<script src="analytics.js?v=3.2.0"></script>
 </head>
 <body>
 
-<header class="site-header">
-  <a href="./" class="site-home" title="Study Apps — home" aria-label="Study Apps — home">🏠</a>
-  <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">&#9790;</button>
-</header>
+<!-- Sticky navigation, filled in by nav.js. -->
+<nav class="site-nav"></nav>
+
+<!-- Names the page; its H1 lives here. -->
+<section class="tool-banner">
+  <div class="tool-banner-inner">
+    <h1>License</h1>
+    <p class="tool-desc">How you may use this work</p>
+  </div>
+</section>
 
 <main class="prose">
-  <h1>License</h1>
   <p class="prose-intro">
     The Reading Notebook, the Study Tracker, and the BAMS Planner (hereafter referred to as "the tools") 
     are free to use and free to build on. Two licences apply depending on which part you want to reuse.
@@ -97,6 +102,7 @@ SOFTWARE.</pre>
 <!-- Licensing bar, filled in by sitebar.js. -->
 <footer class="site-bar"></footer>
 
-<script src="sitebar.js?v=2.2.0"></script>
+<script src="nav.js?v=3.2.0"></script>
+<script src="sitebar.js?v=3.2.0"></script>
 </body>
 </html>

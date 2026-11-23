@@ -43,6 +43,12 @@
   --banner-from: #217582;    /* secondary */
   --banner-to: #185861;      /* deeper secondary; white on it = 9.9:1 */
   --on-banner: #ffffff;      /* 5.3:1 at the gradient's lightest end */
+  /* Button hover, taken from the footer band. One value for both themes:
+     it carries on the cream and on the dark background alike. Always a
+     fill with a near-black label (6.07:1) — as hover *text* on the cream
+     this teal is only 2.72:1 and fails AA. */
+  --color-hover: #36a8a8;
+  --color-hover-text: #1A1A1A;
   --color-bar-bg: #36a8a8;   /* teal band; #1a1a1a on it = 6.1:1 */
   --color-bar-text: #1a1a1a;
   /* Secondary, deepened until it passes AA as body-sized link text on the
@@ -90,6 +96,12 @@
   --banner-from: #2b5050;    /* muted teal; light text on it = 7.6:1 */
   --banner-to: #1a3333;
   --on-banner: #f2f2ec;
+  /* Button hover, taken from the footer band. One value for both themes:
+     it carries on the cream and on the dark background alike. Always a
+     fill with a near-black label (6.07:1) — as hover *text* on the cream
+     this teal is only 2.72:1 and fails AA. */
+  --color-hover: #36a8a8;
+  --color-hover-text: #1A1A1A;
   --color-bar-bg: #234242;   /* muted teal; light text on it = 9.4:1 */
   --color-bar-text: #e6e3dc;
   /* On the dark background the Primary cyan clears 12:1, so links can use
@@ -158,7 +170,11 @@ main {
   line-height: 1;
   cursor: pointer;
 }
-.theme-toggle:hover { color: var(--color-link); border-color: var(--color-primary); }
+.theme-toggle:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
 
 .header-actions { display: flex; gap: 8px; margin-left: auto; }
 
@@ -175,7 +191,11 @@ main {
   background: var(--color-surface);
   color: var(--color-text-muted);
 }
-.btn:hover { border-color: var(--color-primary); color: var(--color-link); }
+.btn:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
 
 .btn-ghost { background: transparent; }
 
@@ -676,7 +696,7 @@ main {
   background: var(--color-bar-bg);
   color: var(--color-bar-text);
   font-size: 0.78rem;
-  padding: 20px 24px;
+  padding: 30px 24px 20px;
 }
 
 .site-bar-inner {
@@ -702,7 +722,19 @@ main {
   gap: 16px;
 }
 
-.site-bar-credit { margin: 0; line-height: 1.6; }
+.site-bar-credit {
+  margin: 0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* The logo stands in for the name, as it does in the nav. */
+.site-bar-mark { display: inline-flex; line-height: 0; }
+.site-bar-mark img { display: block; width: 28px; height: 28px; }
+.site-bar-mark:hover { opacity: 0.8; }
 /* Keeps the place name from breaking across lines mid-phrase. */
 .site-bar-place { white-space: nowrap; }
 
@@ -833,3 +865,160 @@ main {
 .page-notice p { margin: 0 0 6px; }
 .page-notice ul { margin: 0; padding-left: 20px; }
 .page-notice li { margin-bottom: 2px; }
+
+/* ---------- Sticky navigation ----------
+   Rendered by nav.js into <nav class="site-nav">, the first element on every
+   page. Sticks to the top so the way out of a tool is always one click away.
+   Collapses to a hamburger at 640px, matching the grid's breakpoint. */
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.site-nav-brand {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  line-height: 0;
+  border-radius: var(--radius-sm);
+}
+.site-nav-brand img { display: block; width: 32px; height: 32px; }
+.site-nav-brand:hover { opacity: 0.8; }
+
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav-links a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.site-nav-links a:hover { color: var(--color-text); background: var(--color-bg); }
+
+/* The page you are on, marked with weight and a rule rather than colour
+   alone, so it does not rely on hue to be legible. */
+.site-nav-links a.is-current {
+  color: var(--color-text);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+.site-nav-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hidden until the links collapse. */
+.site-nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+}
+.site-nav-toggle:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+}
+
+/* Three bars drawn from one element: the middle is the box, the outer two
+   are its pseudo-elements. */
+.site-nav-bars,
+.site-nav-bars::before,
+.site-nav-bars::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 2px;
+}
+.site-nav-bars { position: relative; }
+.site-nav-bars::before,
+.site-nav-bars::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.site-nav-bars::before { top: -6px; }
+.site-nav-bars::after { top: 6px; }
+
+@media (max-width: 640px) {
+  .site-nav-inner { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
+  .site-nav-toggle { display: flex; }
+
+  /* Closed: the panel is out of the layout entirely, not just invisible. */
+  .site-nav-links {
+    display: none;
+    order: 3;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 8px 0 12px;
+    border-top: 1px solid var(--color-border);
+  }
+  .site-nav.is-open .site-nav-links { display: flex; }
+
+  .site-nav-links a { padding: 12px; font-size: 0.95rem; }
+  .site-nav-links a.is-current {
+    box-shadow: inset 2px 0 0 var(--color-primary);
+  }
+}
+
+/* ---------- Tool actions ----------
+   What used to sit in the app header, minus the navigation and theme switch
+   that moved into the sticky nav. Sits under the banner, with the tool. */
+.app-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  /* Matches this page's <main>, so the export row's edges line up with the
+     notice, the dashboard and the course list below it. The planner's
+     column is 920px, narrower than the Study Tracker's 1000px calendar. */
+  max-width: 920px;
+  margin: 0 auto 16px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .app-actions { padding: 0 16px; }
+}
+
+/* The bars are painted in the text colour, so they follow the button into
+   its hover state rather than disappearing against the teal. */
+.site-nav-toggle:hover .site-nav-bars,
+.site-nav-toggle:hover .site-nav-bars::before,
+.site-nav-toggle:hover .site-nav-bars::after {
+  background: var(--color-hover-text);
+}

@@ -55,6 +55,12 @@
   --banner-from: #217582;    /* secondary */
   --banner-to: #185861;      /* deeper secondary; white on it = 9.9:1 */
   --on-banner: #ffffff;      /* 5.3:1 at the gradient's lightest end */
+  /* Button hover, taken from the footer band. One value for both themes:
+     it carries on the cream and on the dark background alike. Always a
+     fill with a near-black label (6.07:1) — as hover *text* on the cream
+     this teal is only 2.72:1 and fails AA. */
+  --color-hover: #36a8a8;
+  --color-hover-text: #1A1A1A;
   --color-bar-bg: #36a8a8;   /* teal band; #1a1a1a on it = 6.1:1 */
   --color-bar-text: #1a1a1a;
   /* Secondary, deepened until it passes AA as body-sized link text on the
@@ -118,6 +124,12 @@
   --banner-from: #2b5050;    /* muted teal; light text on it = 7.6:1 */
   --banner-to: #1a3333;
   --on-banner: #f2f2ec;
+  /* Button hover, taken from the footer band. One value for both themes:
+     it carries on the cream and on the dark background alike. Always a
+     fill with a near-black label (6.07:1) — as hover *text* on the cream
+     this teal is only 2.72:1 and fails AA. */
+  --color-hover: #36a8a8;
+  --color-hover-text: #1A1A1A;
   --color-bar-bg: #234242;   /* muted teal; light text on it = 9.4:1 */
   --color-bar-text: #e6e3dc;
   /* On the dark background the Primary cyan clears 12:1, so links can use
@@ -182,7 +194,11 @@ body {
   line-height: 1;
   cursor: pointer;
 }
-.theme-toggle:hover { color: var(--color-link); border-color: var(--color-primary); }
+.theme-toggle:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
 
 .view-toggle {
   display: inline-flex;
@@ -225,7 +241,7 @@ body {
   background: var(--color-primary);
   color: var(--color-on-primary);
 }
-.btn-primary:hover { background: var(--color-primary-hover); }
+.btn-primary:hover { background: var(--color-hover); color: var(--color-hover-text); }
 
 /* The primary action sits ahead of the view/theme controls, so it is sized
    up a little to stay the obvious first thing to reach for. */
@@ -240,14 +256,22 @@ body {
   border-color: var(--color-border);
   color: var(--color-text);
 }
-.btn-secondary:hover { border-color: var(--color-primary); }
+.btn-secondary:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
 
 .btn-ghost {
   background: transparent;
   border-color: var(--color-border);
   color: var(--color-text-muted);
 }
-.btn-ghost:hover { background: var(--color-bg); }
+.btn-ghost:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
 
 .btn-danger {
   background: transparent;
@@ -258,12 +282,18 @@ body {
 
 /* ---------- Controls bar ---------- */
 
+/* Same column as <main>, so this row's edges line up with the calendar
+   below it rather than running the full width of the window. */
 .controls-bar {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 14px 24px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .controls-bar input[type="search"],
@@ -504,10 +534,21 @@ main {
   letter-spacing: normal;
 }
 
+/* Empty state, matching the Reading Notebook's. A dashed outline rather
+   than a solid card: it reads as a space waiting to be filled instead of
+   content that happens to be blank. The [hidden] rule above still wins, so
+   `display: flex` here does not reveal it when tasks match. */
 .empty-msg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
+  min-height: 280px;
+  margin: 0;
+  padding: 48px 24px;
   color: var(--color-text-muted);
-  padding: 40px 0;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
 }
 
 /* ---------- Footer ---------- */
@@ -681,7 +722,7 @@ main {
   background: var(--color-bar-bg);
   color: var(--color-bar-text);
   font-size: 0.78rem;
-  padding: 20px 24px;
+  padding: 30px 24px 20px;
 }
 
 .site-bar-inner {
@@ -707,7 +748,19 @@ main {
   gap: 16px;
 }
 
-.site-bar-credit { margin: 0; line-height: 1.6; }
+.site-bar-credit {
+  margin: 0;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* The logo stands in for the name, as it does in the nav. */
+.site-bar-mark { display: inline-flex; line-height: 0; }
+.site-bar-mark img { display: block; width: 28px; height: 28px; }
+.site-bar-mark:hover { opacity: 0.8; }
 /* Keeps the place name from breaking across lines mid-phrase. */
 .site-bar-place { white-space: nowrap; }
 
@@ -757,4 +810,169 @@ main {
   /* Hold the icons to one row of three beside the credit. */
   .social { justify-content: flex-end; max-width: calc(3 * 40px + 2 * 4px); }
   .social a { width: 40px; height: 40px; }
+}
+
+/* ---------- Sticky navigation ----------
+   Rendered by nav.js into <nav class="site-nav">, the first element on every
+   page. Sticks to the top so the way out of a tool is always one click away.
+   Collapses to a hamburger at 640px, matching the grid's breakpoint. */
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.site-nav-brand {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  line-height: 0;
+  border-radius: var(--radius-sm);
+}
+.site-nav-brand img { display: block; width: 32px; height: 32px; }
+.site-nav-brand:hover { opacity: 0.8; }
+
+.site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.site-nav-links a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.site-nav-links a:hover { color: var(--color-text); background: var(--color-bg); }
+
+/* The page you are on, marked with weight and a rule rather than colour
+   alone, so it does not rely on hue to be legible. */
+.site-nav-links a.is-current {
+  color: var(--color-text);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+.site-nav-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Hidden until the links collapse. */
+.site-nav-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+}
+.site-nav-toggle:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+}
+
+/* Three bars drawn from one element: the middle is the box, the outer two
+   are its pseudo-elements. */
+.site-nav-bars,
+.site-nav-bars::before,
+.site-nav-bars::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 2px;
+}
+.site-nav-bars { position: relative; }
+.site-nav-bars::before,
+.site-nav-bars::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+.site-nav-bars::before { top: -6px; }
+.site-nav-bars::after { top: 6px; }
+
+@media (max-width: 640px) {
+  .site-nav-inner { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
+  .site-nav-toggle { display: flex; }
+
+  /* Closed: the panel is out of the layout entirely, not just invisible. */
+  .site-nav-links {
+    display: none;
+    order: 3;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding: 8px 0 12px;
+    border-top: 1px solid var(--color-border);
+  }
+  .site-nav.is-open .site-nav-links { display: flex; }
+
+  .site-nav-links a { padding: 12px; font-size: 0.95rem; }
+  .site-nav-links a.is-current {
+    box-shadow: inset 2px 0 0 var(--color-primary);
+  }
+}
+
+/* ---------- Tool actions ----------
+   What used to sit in the app header, minus the navigation and theme switch
+   that moved into the sticky nav. Sits under the banner, with the tool. */
+.app-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto 16px;
+  padding: 0 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .app-actions { padding: 0 16px; }
+}
+
+/* ---------- Calendar frame ----------
+   One outline around the weekday strip and the day grid, so the calendar
+   reads as a single panel. The grid's own cell borders sit inside it. */
+.calendar-frame {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  padding: 12px;
+  overflow: hidden;
+}
+
+/* The bars are painted in the text colour, so they follow the button into
+   its hover state rather than disappearing against the teal. */
+.site-nav-toggle:hover .site-nav-bars,
+.site-nav-toggle:hover .site-nav-bars::before,
+.site-nav-toggle:hover .site-nav-bars::after {
+  background: var(--color-hover-text);
 }

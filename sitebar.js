@@ -16,7 +16,7 @@
   const SITE = 'https://janisnarvas.com';
 
   // Bumped with the rest of the site's assets; see the README.
-  const ASSET_V = '2.2.0';
+  const ASSET_V = '3.2.0';
 
   const SOCIALS = [
     { href: 'mailto:jlnarvas2@up.edu.ph', icon: 'email.png', label: 'Email' },
@@ -39,10 +39,19 @@
 
     const credit = document.createElement('p');
     credit.className = 'site-bar-credit';
+
+    // The logo stands in for the name, matching the nav. The link carries
+    // the accessible name so the mark itself is marked decorative.
     const name = document.createElement('a');
-    
     name.href = SITE;
-    name.textContent = 'Janis Narvas';
+    name.className = 'site-bar-mark';
+    name.setAttribute('aria-label', 'Janis Narvas');
+    const mark = document.createElement('img');
+    mark.src = `${prefix}icons/favicon-512.png?v=${ASSET_V}`;
+    mark.alt = '';
+    mark.width = 28;
+    mark.height = 28;
+    name.appendChild(mark);
     credit.appendChild(name);
 
     const place = document.createElement('span');

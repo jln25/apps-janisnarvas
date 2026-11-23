@@ -13,11 +13,11 @@
 <meta property="og:title" content="Janis Narvas | Study Tracker">
 <meta property="og:description" content="Track assignments and deadlines in a calendar or list view. Set due dates and times, priorities and status, and export everything to your calendar as an .ics file. Free, no login.">
 <meta property="og:url" content="https://apps.janisnarvas.com/study-tracker/">
-<meta property="og:image" content="https://apps.janisnarvas.com/og-image.png">
+<meta property="og:image" content="https://apps.janisnarvas.com/icons/og-image.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Janis Narvas | Study Tracker">
 <meta name="twitter:description" content="Track assignments and deadlines in a calendar or list view. Set due dates and times, priorities and status, and export everything to your calendar as an .ics file. Free, no login.">
-<meta name="twitter:image" content="https://apps.janisnarvas.com/og-image.png">
+<meta name="twitter:image" content="https://apps.janisnarvas.com/icons/og-image.png">
 
 <!-- Structured data -->
 <script type="application/ld+json">
@@ -49,32 +49,22 @@
   }
 }
 </script>
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32.png?v=2.2.0">
-<link rel="icon" type="image/png" sizes="512x512" href="../favicon-512.png?v=2.2.0">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2.2.0">
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png?v=3.2.0">
+<link rel="icon" type="image/png" sizes="512x512" href="../icons/favicon-512.png?v=3.2.0">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png?v=3.2.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=2.2.0">
+<link rel="stylesheet" href="style.css?v=3.2.0">
 <!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
-<script src="../theme.js?v=2.2.0"></script>
+<script src="../theme.js?v=3.2.0"></script>
 <!-- Google Analytics (GA4) -->
-<script src="../analytics.js?v=2.2.0"></script>
+<script src="../analytics.js?v=3.2.0"></script>
 </head>
 <body>
 
-<header class="app-header">
-  <a href="../" class="home-link" aria-label="Back to all tools">&larr; All tools</a>
-
-  <button type="button" id="add-task-btn" class="btn btn-primary btn-lg">+ Add Task</button>
-
-  <div class="view-toggle" role="tablist" aria-label="View switch">
-    <button type="button" class="toggle-btn active" data-view="calendar" role="tab" aria-selected="true">Calendar</button>
-    <button type="button" class="toggle-btn" data-view="list" role="tab" aria-selected="false">List</button>
-  </div>
-
-  <button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme">☾</button>
-</header>
+<!-- Sticky navigation, filled in by nav.js. -->
+<nav class="site-nav" data-root-prefix="../"></nav>
 
 <!-- Names the tool; the page's H1 lives here. -->
 <section class="tool-banner">
@@ -83,6 +73,17 @@
     <p class="tool-desc">Track assignments and deadlines in a calendar or list view.</p>
   </div>
 </section>
+
+<!-- The tool's own actions. Navigation and the theme switch live in the
+     nav above, so only what belongs to this tool stays here. -->
+<div class="app-actions">
+  <button type="button" id="add-task-btn" class="btn btn-primary btn-lg">+ Add Task</button>
+
+  <div class="view-toggle" role="tablist" aria-label="View switch">
+    <button type="button" class="toggle-btn active" data-view="calendar" role="tab" aria-selected="true">Calendar</button>
+    <button type="button" class="toggle-btn" data-view="list" role="tab" aria-selected="false">List</button>
+  </div>
+</div>
 
 <div class="controls-bar">
   <input type="search" id="search-input" placeholder="Search by name or course…" aria-label="Search tasks">
@@ -124,8 +125,12 @@
         Start week on Monday
       </label>
     </div>
-    <div id="calendar-weekdays" class="calendar-weekdays"></div>
-    <div id="calendar-grid" class="calendar-grid"></div>
+    <!-- Weekday strip and day grid share one frame, so the calendar reads
+         as a single object rather than two stacked rows. -->
+    <div class="calendar-frame">
+      <div id="calendar-weekdays" class="calendar-weekdays"></div>
+      <div id="calendar-grid" class="calendar-grid"></div>
+    </div>
   </section>
 
   <!-- LIST VIEW -->
@@ -221,7 +226,8 @@
 <!-- Licensing bar, filled in by sitebar.js. -->
 <footer class="site-bar" data-root-prefix="../"></footer>
 
-<script src="script.js?v=2.2.0"></script>
-<script src="../sitebar.js?v=2.2.0"></script>
+<script src="script.js?v=3.2.0"></script>
+<script src="../nav.js?v=3.2.0"></script>
+<script src="../sitebar.js?v=3.2.0"></script>
 </body>
 </html>
