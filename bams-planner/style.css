@@ -902,7 +902,9 @@ main {
   display: flex;
   align-items: center;
   gap: 4px;
-  margin: 0;
+  /* Pushed right, so the logo sits alone on the left and the links group
+     with the theme switch rather than crowding the mark. */
+  margin: 0 0 0 auto;
   padding: 0;
   list-style: none;
 }
@@ -926,7 +928,6 @@ main {
 }
 
 .site-nav-actions {
-  margin-left: auto;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -979,6 +980,7 @@ main {
     display: none;
     order: 3;
     width: 100%;
+    margin-left: 0;
     flex-direction: column;
     align-items: stretch;
     gap: 2px;
