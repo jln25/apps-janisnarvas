@@ -14,7 +14,7 @@
 
 (() => {
   // Bumped with the rest of the site's assets.
-  const ASSET_V = '3.3.0';
+  const ASSET_V = '3.4.0';
 
   const LINKS = [
     { label: 'Study Tracker', path: 'study-tracker/' },
