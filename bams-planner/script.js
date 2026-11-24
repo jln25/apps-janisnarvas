@@ -60,8 +60,21 @@ function loadCourses() {
   return JSON.parse(JSON.stringify(DEFAULT_COURSES));
 }
 
+/* Warn once per page load: with storage full every later change would alert. */
+let storageWarned = false;
+
 function saveCourses() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(courses));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(courses));
+  } catch (err) {
+    // The quota is shared by every app on this domain, so a large Reading
+    // Notebook can be what stops the plan saving.
+    console.error('Failed to save courses to localStorage', err);
+    if (!storageWarned) {
+      storageWarned = true;
+      alert('Could not save your plan — your browser storage is full.\n\nUse Export CSV or Export PDF to keep a copy before making more changes.');
+    }
+  }
 }
 
 /* Every field is re-derived rather than trusted, so a hand-edited or
@@ -86,7 +99,14 @@ function loadViewPrefs() {
 }
 
 function saveViewPrefs() {
-  localStorage.setItem(VIEW_KEY, JSON.stringify(viewPrefs));
+  // Which sections are collapsed is a view, not the user's work: if it cannot
+  // be stored the view still holds for this visit. Never interrupt for it,
+  // and never let it be the thing that fails a course change.
+  try {
+    localStorage.setItem(VIEW_KEY, JSON.stringify(viewPrefs));
+  } catch (err) {
+    console.error('Failed to save view preferences to localStorage', err);
+  }
 }
 
 let viewPrefs = loadViewPrefs();

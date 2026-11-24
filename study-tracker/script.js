@@ -51,8 +51,22 @@ function loadTasks() {
   }
 }
 
+/* Warn once per page load: with storage full every later click would save,
+   fail, and alert again. */
+let storageWarned = false;
+
 function saveTasks() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  } catch (err) {
+    // The quota is shared by every app on this domain, so a large Reading
+    // Notebook can be what stops the tracker saving.
+    console.error('Failed to save tasks to localStorage', err);
+    if (!storageWarned) {
+      storageWarned = true;
+      alert('Could not save — your browser storage is full.\n\nExport your tasks to a calendar file before making more changes, or clear space by deleting old notes in the other apps.');
+    }
+  }
 }
 
 function generateId() {
@@ -316,7 +330,9 @@ renderWeekdayHeader();
 
 els.weekStartToggle.addEventListener('change', () => {
   weekStartsMonday = els.weekStartToggle.checked;
-  localStorage.setItem(WEEK_START_KEY, String(weekStartsMonday));
+  // A preference, not the user's work: if it cannot be stored the toggle
+  // still applies for this visit, so there is nothing worth interrupting for.
+  try { localStorage.setItem(WEEK_START_KEY, String(weekStartsMonday)); } catch { /* storage unavailable */ }
   renderWeekdayHeader();
   renderCalendarView();
 });

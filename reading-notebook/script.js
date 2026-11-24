@@ -35,8 +35,21 @@ function loadNotes() {
   }
 }
 
+/* Warn once per page load: with storage full every later save would alert. */
+let storageWarned = false;
+
 function saveNotes() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+  } catch (err) {
+    // Six rich-text fields a note makes this the app most likely to fill the
+    // quota, which every app on this domain shares.
+    console.error('Failed to save notes to localStorage', err);
+    if (!storageWarned) {
+      storageWarned = true;
+      alert('Could not save this note — your browser storage is full.\n\nExport your notebook to Markdown or CSV before making more changes, then delete some notes to free space.');
+    }
+  }
 }
 
 function generateId() {
