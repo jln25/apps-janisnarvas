@@ -757,7 +757,12 @@ els.exportCsvBtn.addEventListener('click', () => {
 });
 
 function csvEscape(value) {
-  const str = String(value ?? '');
+  // Excel and Sheets treat a field starting with = + - @ (or a leading tab or
+  // carriage return) as a formula, which would then run on whoever opens the
+  // Plan of Study. A leading apostrophe marks it as text and is not displayed.
+  let str = String(value ?? '');
+  if (/^[=+\-@\t\r]/.test(str)) str = `'${str}`;
+
   return /[",\r\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
 }
 

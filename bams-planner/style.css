@@ -55,10 +55,6 @@
      cream background: the palette's own accents top out at 2.7:1 there. */
   --color-link: #1D6B77;
   --radius-sm: 4px;      /* inputs, chips */
-  --radius-lg: 24px;     /* modals, containers */
-  --radius-full: 9999px; /* pills, avatars */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 /* ---------- Dark theme ----------
@@ -107,11 +103,7 @@
   /* On the dark background the Primary cyan clears 12:1, so links can use
      it directly rather than the deepened light-mode teal. */
   --color-link: #50ebec;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
-
-* { box-sizing: border-box; }
 
 /* The `hidden` attribute must always win over any rule that sets `display`. */
 [hidden] { display: none !important; }
@@ -156,6 +148,7 @@ main {
   text-decoration: none;
   white-space: nowrap;
 }
+
 .home-link:hover { color: var(--color-link); }
 
 .theme-toggle {
@@ -169,11 +162,6 @@ main {
   font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;
-}
-.theme-toggle:hover {
-  background: var(--color-hover);
-  border-color: var(--color-hover);
-  color: var(--color-hover-text);
 }
 
 .header-actions { display: flex; gap: 8px; margin-left: auto; }
@@ -191,6 +179,7 @@ main {
   background: var(--color-surface);
   color: var(--color-text-muted);
 }
+
 .btn:hover {
   background: var(--color-hover);
   border-color: var(--color-hover);
@@ -330,6 +319,7 @@ main {
 }
 
 .checkbox-label:hover { color: var(--color-text); }
+
 .checkbox-label input { accent-color: var(--color-link); cursor: pointer; }
 
 .list-controls select {
@@ -393,6 +383,7 @@ main {
 /* The default triangle is replaced by a chevron that rotates, so the control
    matches the rest of the page rather than the browser's own furniture. */
 .course-category-heading-sub::-webkit-details-marker { display: none; }
+
 .course-category-heading-sub { list-style: none; }
 
 .course-category-heading-sub::before {
@@ -541,6 +532,7 @@ main {
 }
 
 .course-row select { flex: 0 0 140px; }
+
 .course-row input[type="text"] { flex: 0 0 130px; }
 
 /* ---------- Status ----------
@@ -662,131 +654,12 @@ main {
   margin-bottom: 28px;
 }
 
-.tool-banner-inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 40px 24px;
-  text-align: center;
-}
-
-.tool-banner h1 {
-  margin: 0;
-  font-size: 2.2rem;
-  line-height: 1.1;
-}
-
-.tool-banner .tool-desc {
-  margin: 0;
-  max-width: 620px;
-  font-size: 1rem;
-  line-height: 1.5;
-  opacity: 0.9;
-}
-
-@media (max-width: 600px) {
-  .tool-banner-inner { padding: 28px 16px; }
-  .tool-banner h1 { font-size: 1.6rem; }
-  .tool-banner .tool-desc { font-size: 0.92rem; }
-}
-
 .site-bar {
   background: var(--color-bar-bg);
   color: var(--color-bar-text);
   font-size: 0.78rem;
   padding: 30px 24px 20px;
 }
-
-.site-bar-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.site-bar a {
-  color: inherit;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.site-bar a:hover { opacity: 0.75; }
-
-/* Credit on the left, contact icons on the right. */
-.site-bar-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-.site-bar-credit {
-  margin: 0;
-  line-height: 1.6;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-/* The logo stands in for the name, as it does in the nav. */
-.site-bar-mark { display: inline-flex; line-height: 0; }
-.site-bar-mark img { display: block; width: 28px; height: 28px; }
-.site-bar-mark:hover { opacity: 0.8; }
-/* Keeps the place name from breaking across lines mid-phrase. */
-.site-bar-place { white-space: nowrap; }
-
-/* The copyright and the place sit on their own lines, as two statements
-   rather than one run-on sentence. */
-.site-bar-place { display: block; }
-
-.site-bar-terms {
-  margin: 0;
-  padding-left: 18px;
-  line-height: 1.7;
-  opacity: 0.85;
-}
-.site-bar-terms li { margin: 0; }
-
-.social {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  flex: none;
-}
-
-.social a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* A comfortable touch target around a 20px icon. */
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  text-decoration: none;
-}
-.social a:hover { background: rgba(0, 0, 0, 0.12); opacity: 1; }
-.social img { display: block; width: 20px; height: 20px; }
-
-/* The icons are dark glyphs, which read on the light teal. On the muted dark
-   teal they are inverted to white instead. */
-:root[data-theme="dark"] .social img { filter: invert(1); }
-:root[data-theme="dark"] .social a:hover { background: rgba(255, 255, 255, 0.12); }
-
-@media (max-width: 600px) {
-  .site-bar-row { gap: 12px; }
-  .site-bar-credit { flex: 1; min-width: 0; }
-  /* Hold the icons to one row of three beside the credit. */
-  .social { justify-content: flex-end; max-width: calc(3 * 40px + 2 * 4px); }
-  .social a { width: 40px; height: 40px; }
-}
-
 
 /* ---------- Term load summary ---------- */
 
@@ -864,142 +737,10 @@ main {
 
 /* The notice carries a short list now, so it needs block spacing. */
 .page-notice p { margin: 0 0 6px; }
+
 .page-notice ul { margin: 0; padding-left: 20px; }
+
 .page-notice li { margin-bottom: 2px; }
-
-/* ---------- Sticky navigation ----------
-   Rendered by nav.js into <nav class="site-nav">, the first element on every
-   page. Sticks to the top so the way out of a tool is always one click away.
-   Collapses to a hamburger at 640px, matching the grid's breakpoint. */
-
-.site-nav {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-}
-
-.site-nav-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 8px 24px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-.site-nav-brand {
-  display: flex;
-  align-items: center;
-  flex: 0 0 auto;
-  line-height: 0;
-  border-radius: var(--radius-sm);
-}
-.site-nav-brand img { display: block; width: 32px; height: 32px; }
-.site-nav-brand:hover { opacity: 0.8; }
-
-.site-nav-links {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  /* Pushed right, so the logo sits alone on the left and the links group
-     with the theme switch rather than crowding the mark. */
-  margin: 0 0 0 auto;
-  padding: 0;
-  list-style: none;
-}
-
-.site-nav-links a {
-  display: block;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 0.88rem;
-  color: var(--color-text-muted);
-  text-decoration: none;
-}
-.site-nav-links a:hover { color: var(--color-text); background: var(--color-bg); }
-
-/* The page you are on, marked with weight and a rule rather than colour
-   alone, so it does not rely on hue to be legible. */
-.site-nav-links a.is-current {
-  color: var(--color-text);
-  font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--color-primary);
-}
-
-.site-nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Hidden until the links collapse. */
-.site-nav-toggle {
-  display: none;
-  width: 44px;
-  height: 44px;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: transparent;
-  cursor: pointer;
-}
-.site-nav-toggle:hover {
-  background: var(--color-hover);
-  border-color: var(--color-hover);
-}
-
-/* Three bars drawn from one element: the middle is the box, the outer two
-   are its pseudo-elements. */
-.site-nav-bars,
-.site-nav-bars::before,
-.site-nav-bars::after {
-  display: block;
-  width: 18px;
-  height: 2px;
-  background: var(--color-text);
-  border-radius: 2px;
-}
-.site-nav-bars { position: relative; }
-.site-nav-bars::before,
-.site-nav-bars::after {
-  content: '';
-  position: absolute;
-  left: 0;
-}
-.site-nav-bars::before { top: -6px; }
-.site-nav-bars::after { top: 6px; }
-
-@media (max-width: 640px) {
-  .site-nav-inner { padding: 8px 16px; flex-wrap: wrap; gap: 8px; }
-  .site-nav-toggle { display: flex; }
-
-  /* The links drop into the panel below, so the auto margin they carry on
-     desktop stops pushing anything. The controls take it here instead, which
-     puts the theme switch and the hamburger against the right edge. */
-  .site-nav-actions { margin-left: auto; }
-
-  /* Closed: the panel is out of the layout entirely, not just invisible. */
-  .site-nav-links {
-    display: none;
-    order: 3;
-    width: 100%;
-    margin-left: 0;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 2px;
-    padding: 8px 0 12px;
-    border-top: 1px solid var(--color-border);
-  }
-  .site-nav.is-open .site-nav-links { display: flex; }
-
-  .site-nav-links a { padding: 12px; font-size: 0.95rem; }
-  .site-nav-links a.is-current {
-    box-shadow: inset 2px 0 0 var(--color-primary);
-  }
-}
 
 /* ---------- Tool actions ----------
    What used to sit in the app header, minus the navigation and theme switch
@@ -1021,12 +762,4 @@ main {
 
 @media (max-width: 640px) {
   .app-actions { padding: 0 16px; }
-}
-
-/* The bars are painted in the text colour, so they follow the button into
-   its hover state rather than disappearing against the teal. */
-.site-nav-toggle:hover .site-nav-bars,
-.site-nav-toggle:hover .site-nav-bars::before,
-.site-nav-toggle:hover .site-nav-bars::after {
-  background: var(--color-hover-text);
 }
