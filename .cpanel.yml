@@ -1,5 +1,0 @@
----
-deployment:
-  tasks:
-    - export DEPLOYPATH=/home/janisnar/public_html/apps/
-    - rsync -av --exclude='.git' ./ $DEPLOYPATH
