@@ -136,7 +136,17 @@ main {
   line-height: 1.15;
   letter-spacing: -0.01em;
   margin: 0 0 16px;
-  max-width: 16ch;           /* breaks to two lines without a <br> */
+  max-width: 20ch;
+}
+
+/* The second line is part of the same sentence, so it stays inside the H1.
+   An <h2> here would announce a section called "(because I needed them)" to
+   anyone navigating by headings. `em` keeps it in proportion when the H1
+   shrinks at the mobile breakpoint. */
+.home-hero h1 span {
+  display: block;
+  font-size: 0.72em;
+  letter-spacing: 0;
 }
 
 .home-hero-desc {
