@@ -212,10 +212,16 @@ main {
 }
 
 @media (max-width: 640px) {
-  .home-hero-inner { padding: 56px 16px 0; gap: 24px; }
+  /* The row becomes a column so the headline lands first and the cat follows
+     it. Side by side at this width the image would not shrink below its fixed
+     280px and would squeeze the text into a few words a line. */
+  .home-hero-inner { padding: 56px 16px 0; gap: 24px; flex-direction: column; align-items: center; }
   .home-hero h1 { font-size: 1.9rem; }
-  /* At phone width the mark competes with the headline for the eye. */
-  .home-hero-mark { display: none; }
+  .home-hero-text { text-align: center; }
+  .home-hero h1, .home-hero-desc { max-width: none; }
+  /* vw-capped rather than fixed: it has the full column to itself here, and
+     60vw keeps it in proportion from a 320px phone up to the breakpoint. */
+  .home-hero-mark { width: min(220px, 60vw); height: auto; }
 }
 
 .theme-toggle {
