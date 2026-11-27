@@ -62,7 +62,6 @@
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = s.href;
-      // A mailto: has nowhere to open and no opener to disown.
       if (!s.href.startsWith('mailto:')) {
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
@@ -73,7 +72,6 @@
       img.src = `${prefix}icons/${s.icon}?v=${ASSET_V}`;
       img.width = 20;
       img.height = 20;
-      // The link carries the accessible name, so the image is decorative.
       img.alt = '';
       a.appendChild(img);
 
@@ -81,8 +79,7 @@
       list.appendChild(li);
     });
 
-    // Column 3 — contact. The icons get a heading so they are announced
-    // rather than three unexplained circles in the corner.
+    // Column 3 — contact
     const contact = document.createElement('div');
     contact.className = 'site-bar-contact';
     const sayHello = document.createElement('p');
@@ -90,15 +87,12 @@
     sayHello.textContent = 'Say hello';
     contact.append(sayHello, list);
 
-    // Column 2 (the licence terms) is appended by render(), which owns the
+    // Column 2 (the license terms) is appended by render(), which owns the
     // prefix those links need.
     row.append(credit, contact);
     return row;
   }
 
-  /* Three short terms rather than a paragraph: the licensing splits cleanly
-     in two (code, then writing and design) and the repository is a third
-     thing again, so a list says it in fewer words than prose can. */
   function buildTerms(prefix) {
     const list = document.createElement('ul');
     list.className = 'site-bar-terms';
@@ -125,18 +119,14 @@
       if (bar.dataset.rendered) return; // guard against double-invocation
       bar.dataset.rendered = 'true';
 
-      // Pages one level down (the apps) need "../" to reach the root.
       const prefix = bar.dataset.rootPrefix || '';
 
-      // One row of three columns: identity, licence, contact. The terms are
-      // built here because they need the prefix, then slotted between the
-      // other two rather than stacked underneath them.
       const row = buildCredit(prefix);
       const terms = document.createElement('div');
-      terms.className = 'site-bar-licence';
+      terms.className = 'site-bar-license';
       const heading = document.createElement('p');
       heading.className = 'site-bar-heading';
-      heading.textContent = 'Licence';
+      heading.textContent = 'License';
       terms.append(heading, buildTerms(prefix));
       row.insertBefore(terms, row.lastElementChild);
 

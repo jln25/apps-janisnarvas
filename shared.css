@@ -40,9 +40,6 @@
 .site-bar a:hover { opacity: 0.75; }
 
 /* Credit on the left, contact icons on the right. */
-/* Identity, licence, contact. Previously everything stacked against the left
-   edge, which left the right half empty and gave three lines of licence text
-   the same weight as who made the site. */
 .site-bar-row {
   display: grid;
   grid-template-columns: 1.1fr 1.4fr auto;
@@ -53,10 +50,10 @@
 .site-bar-heading {
   margin: 0 0 10px;
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  opacity: 0.75;
+  opacity: 0.9;
 }
 
 .site-bar-contact { text-align: right; }
