@@ -9,3 +9,6 @@
 
 # Another project, kept here only as a local reference.
 copy-cat/
+
+# Local test page. Kept on disk, not in version control.
+tests/
