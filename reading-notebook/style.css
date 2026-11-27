@@ -593,9 +593,3 @@ body {
   margin-bottom: 28px;
 }
 
-.site-bar {
-  background: var(--color-bar-bg);
-  color: var(--color-bar-text);
-  font-size: 0.78rem;
-  padding: 30px 24px 20px;
-}

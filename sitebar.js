@@ -16,7 +16,7 @@
   const SITE = 'https://janisnarvas.com';
 
   // Bumped with the rest of the site's assets; see the README.
-  const ASSET_V = '3.7.0';
+  const ASSET_V = '4.0.0';
 
   const SOCIALS = [
     { href: 'mailto:jlnarvas2@up.edu.ph', icon: 'email.png', label: 'Email' },
@@ -37,22 +37,19 @@
     const row = document.createElement('div');
     row.className = 'site-bar-row';
 
+    // Column 1 — who made this. Text rather than the logo: the nav already
+    // carries the mark, and showing it twice a page earned nothing.
     const credit = document.createElement('p');
     credit.className = 'site-bar-credit';
 
-    // The logo stands in for the name, matching the nav. The link carries
-    // the accessible name so the mark itself is marked decorative.
+    // One line, one flex item: the column stacks its children, so a bare
+    // text node beside the link would put "Apps by" on its own row.
+    const byline = document.createElement('span');
     const name = document.createElement('a');
     name.href = SITE;
-    name.className = 'site-bar-mark';
-    name.setAttribute('aria-label', 'Janis Narvas');
-    const mark = document.createElement('img');
-    mark.src = `${prefix}icons/favicon-512.png?v=${ASSET_V}`;
-    mark.alt = '';
-    mark.width = 28;
-    mark.height = 28;
-    name.appendChild(mark);
-    credit.appendChild(name);
+    name.textContent = 'Janis Narvas';
+    byline.append('Apps by ', name);
+    credit.appendChild(byline);
 
     const place = document.createElement('span');
     place.className = 'site-bar-place';
@@ -84,7 +81,18 @@
       list.appendChild(li);
     });
 
-    row.append(credit, list);
+    // Column 3 — contact. The icons get a heading so they are announced
+    // rather than three unexplained circles in the corner.
+    const contact = document.createElement('div');
+    contact.className = 'site-bar-contact';
+    const sayHello = document.createElement('p');
+    sayHello.className = 'site-bar-heading';
+    sayHello.textContent = 'Say hello';
+    contact.append(sayHello, list);
+
+    // Column 2 (the licence terms) is appended by render(), which owns the
+    // prefix those links need.
+    row.append(credit, contact);
     return row;
   }
 
@@ -120,9 +128,21 @@
       // Pages one level down (the apps) need "../" to reach the root.
       const prefix = bar.dataset.rootPrefix || '';
 
+      // One row of three columns: identity, licence, contact. The terms are
+      // built here because they need the prefix, then slotted between the
+      // other two rather than stacked underneath them.
+      const row = buildCredit(prefix);
+      const terms = document.createElement('div');
+      terms.className = 'site-bar-licence';
+      const heading = document.createElement('p');
+      heading.className = 'site-bar-heading';
+      heading.textContent = 'Licence';
+      terms.append(heading, buildTerms(prefix));
+      row.insertBefore(terms, row.lastElementChild);
+
       const inner = document.createElement('div');
       inner.className = 'site-bar-inner';
-      inner.append(buildCredit(prefix), buildTerms(prefix));
+      inner.append(row);
       bar.appendChild(inner);
     });
   }

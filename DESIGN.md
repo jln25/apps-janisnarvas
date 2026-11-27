@@ -80,7 +80,7 @@ a shadow tuned for white disappears on a dark surface.
 - **Buttons** — 16px vertical / 24px horizontal padding, 48px tall, scale to
   1.02 on hover.
 - **Inputs** — 48px tall, 16px padding, 2px border on focus in Primary.
-- **Cards** — 24px padding, medium shadow, medium radius.
+- **Cards** — 32px padding, medium shadow, medium radius.
 
 **Not yet applied to dense controls.** The BAMS Planner puts 112 `<select>`
 elements in one 56-row list; at 48px each that list becomes unusable. Standalone

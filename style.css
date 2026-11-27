@@ -112,23 +112,50 @@ main {
   flex-direction: column;
   justify-content: center; /* Vertically centers your title + 4 cards */
   box-sizing: border-box;
-  padding: 4rem 1.5rem; /* Ensures breathing room on smaller screens */
+  padding: 96px 24px; /* the space above and below the card grid */
 }
 
-.intro {
-  text-align: center;
-  margin-bottom: 48px;
+/* ---------- Home hero ----------
+   The home page has no gradient band on purpose. That band belongs to the
+   three tools, and wearing it here made the front door look like a fourth
+   one. Dropping the slab is also where most of this page's breathing room
+   comes from, rather than padding piled on top of it. */
+
+.home-hero-inner {
+  max-width: 900px;          /* same column as <main> below it */
+  margin: 0 auto;
+  padding: 96px 24px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
 }
 
-.intro h1 {
-  font-size: 2rem;
-  margin: 0 0 10px;
+.home-hero h1 {
+  font-size: 2.6rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 16px;
+  max-width: 16ch;           /* breaks to two lines without a <br> */
 }
 
-.intro p {
-  color: var(--color-text-muted);
-  font-size: 1.05rem;
+.home-hero-desc {
   margin: 0;
+  max-width: 46ch;
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+}
+
+/* favicon-512.png is RGB with no alpha channel, so its white background
+   cannot sit invisibly on the cream. Rather than fade it — which just looks
+   like a mistake — it is drawn as a tile matching the cards below it. A
+   transparent PNG would let this drop to a bare mark. */
+.home-hero-mark {
+  flex: 0 0 auto;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
 }
 
 /* Two up on desktop rather than auto-fit: with four tools that gives a square
@@ -136,7 +163,7 @@ main {
 .tool-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: 32px;
 }
 
 @media (max-width: 640px) {
@@ -148,7 +175,7 @@ main {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  padding: 24px;
+  padding: 32px;
   text-decoration: none;
   color: inherit;
   box-shadow: var(--shadow);
@@ -161,9 +188,9 @@ main {
 }
 
 .tool-card-icon {
-  font-size: 1.8rem;
+  font-size: 2.4rem;
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .tool-card-name {
@@ -177,8 +204,11 @@ main {
   margin: 0;
 }
 
-@media (max-width: 500px) {
-  .intro h1 { font-size: 1.5rem; }
+@media (max-width: 640px) {
+  .home-hero-inner { padding: 56px 16px 0; gap: 24px; }
+  .home-hero h1 { font-size: 1.9rem; }
+  /* At phone width the mark competes with the headline for the eye. */
+  .home-hero-mark { display: none; }
 }
 
 .theme-toggle {
@@ -192,15 +222,6 @@ main {
   font-size: 0.95rem;
   line-height: 1;
   cursor: pointer;
-}
-
-/* ---------- Shared version / copyright bar ---------- */
-
-.site-bar {
-  background: var(--color-bar-bg);
-  color: var(--color-bar-text);
-  font-size: 0.78rem;
-  padding: 30px 24px 20px;
 }
 
 /* ---------- License page ---------- */
