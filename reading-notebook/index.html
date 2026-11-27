@@ -102,7 +102,14 @@
     <section id="list-view" class="view">
       <div id="active-filter-banner" class="active-filter-banner" hidden></div>
       <div id="note-list" class="note-list"></div>
-      <p id="list-empty-msg" class="empty-msg" hidden>No notes yet — click “+ New Note” to start your notebook.</p>
+      <!-- Empty state. The sample button is hidden by script.js as soon as the
+           notebook holds anything, so it only ever offers to fill an empty
+           notebook. Deleting the sample empties it again and the button
+           returns, which is what keeps the sample reversible. -->
+      <div id="list-empty-msg" class="empty-msg" hidden>
+        <p>No notes yet — click “+ New Note” to start your notebook.</p>
+        <button type="button" id="load-sample-btn" class="btn btn-secondary">Load a sample note</button>
+      </div>
     </section>
 
     <!-- DETAIL VIEW -->

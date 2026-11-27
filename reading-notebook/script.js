@@ -17,6 +17,33 @@ const RICH_FIELDS = [
   { key: 'gap', label: 'Gap / Limitation' },
 ];
 
+/* ---------- Sample note ----------
+   Offered from the empty state so a first-time visitor can see what a filled
+   notebook looks like — the tag cloud, the card snippets, the six fields and
+   the exports all need a note before they show anything at all.
+
+   One note rather than a set, because the sample has to be as easy to get rid
+   of as it is to add: open it, Delete, and the notebook is empty again (and
+   the button comes back). It also carries the #sample tag, so the tag cloud
+   says plainly which note came from here. The HTML stays inside the toolbar's
+   own tag set, so the sample is exactly the shape a hand-written note is. */
+
+const SAMPLE_NOTE = {
+  title: 'Flor (1991) — Development Communication and the Collective Mind',
+  tags: ['sample', 'dev-comm', 'flor', 'collective-mind'],
+  bibliography: '<p>Flor, A. G. (1991). <i>Development communication and the collective mind.</i> University of the Philippines Los Baños.</p>',
+  method: '<p>Conceptual paper. No respondents — the argument is built from earlier development-communication literature rather than from fieldwork.</p>',
+  findings: '<p>Treats a community as holding one shared store of knowledge rather than a set of separate minds.</p><ul><li>Communication is what keeps that shared store in step, so it is infrastructure, not decoration.</li><li>A message that never reaches the group changes nothing, however well made it is.</li><li>Puts the unit of analysis at the community, not the individual recipient.</li></ul>',
+  takeaway: '<p>Gives me the frame for the review of related literature: it is the reason my study measures reach at the <b>group</b> level instead of counting individual views.</p>',
+  reflection: '<p>The idea is older than the platforms I am looking at, and it survives the move surprisingly well — a group chat is a collective mind with a scrollback.</p>',
+  gap: '<p>No empirical test, and nothing on what happens when the shared store splits into factions that no longer talk. That split is the normal case online.</p>',
+};
+
+function buildSampleNote() {
+  const now = new Date().toISOString();
+  return { id: generateId(), createdAt: now, updatedAt: now, ...SAMPLE_NOTE };
+}
+
 /* ---------- State ---------- */
 
 let notes = loadNotes();
@@ -68,6 +95,7 @@ const els = {
   activeFilterBanner: document.getElementById('active-filter-banner'),
   noteList: document.getElementById('note-list'),
   listEmptyMsg: document.getElementById('list-empty-msg'),
+  loadSampleBtn: document.getElementById('load-sample-btn'),
 
   detailView: document.getElementById('detail-view'),
   noteDetailContent: document.getElementById('note-detail-content'),
@@ -285,6 +313,10 @@ function renderListView() {
 
   els.noteList.innerHTML = '';
   els.listEmptyMsg.hidden = filtered.length !== 0;
+  /* The empty panel also shows when a search or tag filter matches nothing, and
+     offering samples there would be answering a question nobody asked. Keyed on
+     the whole notebook, not the filtered view. */
+  els.loadSampleBtn.hidden = notes.length !== 0;
 
   filtered.forEach((note) => {
     const card = document.createElement('div');
@@ -316,6 +348,16 @@ function renderListView() {
 els.searchInput.addEventListener('input', renderListView);
 
 els.newNoteBtn.addEventListener('click', () => openFormView(null));
+
+els.loadSampleBtn.addEventListener('click', () => {
+  // Only ever adds to an empty notebook, so there is nothing to overwrite and
+  // nothing to confirm. The guard also covers a double click.
+  if (notes.length !== 0) return;
+  notes = [buildSampleNote()];
+  saveNotes();
+  renderTagCloud();
+  renderListView();
+});
 els.backToListBtn.addEventListener('click', () => {
   showView('list');
   renderListView();
@@ -444,6 +486,9 @@ els.noteForm.addEventListener('submit', (e) => {
 function stripHtmlToText(html) {
   const div = document.createElement('div');
   div.innerHTML = html || '';
+  // Block elements carry no whitespace of their own, so textContent alone
+  // fuses the end of one paragraph to the start of the next ("...minds.Communication").
+  div.querySelectorAll('p, div, li, br, blockquote').forEach((el) => el.before(' '));
   return (div.textContent || '').replace(/\s+/g, ' ').trim();
 }
 
