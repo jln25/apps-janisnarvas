@@ -146,17 +146,14 @@ main {
   color: var(--color-text-muted);
 }
 
-/* favicon-512.png is RGB with no alpha channel, so its white background
-   cannot sit invisibly on the cream. Rather than fade it — which just looks
-   like a mistake — it is drawn as a tile matching the cards below it. A
-   transparent PNG would let this drop to a bare mark. */
 .home-hero-mark {
   flex: 0 0 auto;
-  width: 96px;
-  height: 96px;
+  width: 280px;
+  height: 280px;
   border-radius: var(--radius);
-  border: 1px solid var(--color-border);
+  border: 0.5px solid var(--color-border);
 }
+
 
 /* Two up on desktop rather than auto-fit: with four tools that gives a square
    2x2 block, where auto-fit was fitting three across and orphaning the last. */
