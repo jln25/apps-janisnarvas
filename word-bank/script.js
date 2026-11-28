@@ -9,13 +9,7 @@
 (() => {
   const WORDS = window.WORDS || [];
   const byId = new Map(WORDS.map((c) => [c.id, c]));
-  const MAX_PICKS = 3;
 
-  const GROUPS = [
-    { key: 'mood', title: 'Moods' },
-    { key: 'industry', title: 'Industries' },
-    { key: 'context', title: 'Page sections' },
-  ];
   const GROUP_LABEL = { mood: 'Mood', industry: 'Industry', context: 'Page section' };
   const WORD_KINDS = [
     ['adjectives', 'Adjectives'],
@@ -24,15 +18,20 @@
     ['phrases', 'Phrases'],
   ];
 
+  // One dropdown per slot. Results follow this order.
+  const SLOTS = ['mood1', 'mood2', 'industry', 'context'];
+  const SLOT_GROUP = { mood1: 'mood', mood2: 'mood', industry: 'industry', context: 'context' };
+
   const $ = (id) => document.getElementById(id);
   const els = {
     form: $('search-form'),
     input: $('search-input'),
-    selected: $('selected'),
-    selectedChips: $('selected-chips'),
+    suggest: $('search-suggest'),
+    selects: Object.fromEntries(SLOTS.map((s) => [s, $(`pick-${s}`)])),
+    mood2Field: $('mood2-field'),
+    addMood: $('add-mood-btn'),
     clear: $('clear-btn'),
     results: $('results'),
-    browse: $('browse'),
     noMatch: $('no-match'),
     noMatchText: $('no-match-text'),
     dmBtn: $('datamuse-btn'),
@@ -40,9 +39,32 @@
     toast: $('toast'),
   };
 
-  // Picks survive a reload and can be bookmarked: ?w=luxury,food
-  let picks = (new URLSearchParams(location.search).get('w') || '')
-    .split(',').filter((id) => byId.has(id)).slice(0, MAX_PICKS);
+  /* ---------- State ----------
+     Picks survive a reload and can be bookmarked: ?w=luxury,food,pricing-packaging.
+     Each id goes to the first free slot of its group. */
+
+  const picks = { mood1: '', mood2: '', industry: '', context: '' };
+  let showMood2 = false;
+
+  new Set((new URLSearchParams(location.search).get('w') || '').split(',')).forEach((id) => {
+    const cat = byId.get(id);
+    if (!cat) return;
+    const slot = SLOTS.find((s) => SLOT_GROUP[s] === cat.group && !picks[s]);
+    if (slot) picks[slot] = id;
+  });
+  showMood2 = Boolean(picks.mood2);
+
+  function pickedIds() {
+    return [...new Set(SLOTS.map((s) => picks[s]).filter(Boolean))];
+  }
+
+  function syncUrl() {
+    const url = new URL(location.href);
+    const ids = pickedIds();
+    if (ids.length) url.searchParams.set('w', ids.join(','));
+    else url.searchParams.delete('w');
+    history.replaceState(null, '', url);
+  }
 
   /* ---------- Helpers ---------- */
 
@@ -94,59 +116,94 @@
     ]);
   }
 
+  /* ---------- Dropdowns ---------- */
+
+  function option(cat) {
+    return el('option', { value: cat.id, text: cat.name });
+  }
+
+  function fillSelects() {
+    const of = (group) => WORDS.filter((c) => c.group === group);
+    const moods = of('mood');
+
+    ['mood1', 'mood2'].forEach((slot) => {
+      els.selects[slot].replaceChildren(
+        el('option', { value: '', text: slot === 'mood1' ? 'Any mood' : 'No second mood' }),
+        ...moods.map(option),
+      );
+    });
+
+    // Professional services get their own labelled part of the list.
+    const industries = of('industry');
+    els.selects.industry.replaceChildren(
+      el('option', { value: '', text: 'Any industry' }),
+      el('optgroup', { label: 'Professional services' },
+        industries.filter((c) => c.parent === 'professional-services').map(option)),
+      el('optgroup', { label: 'Other industries' },
+        industries.filter((c) => c.parent !== 'professional-services').map(option)),
+    );
+
+    els.selects.context.replaceChildren(
+      el('option', { value: '', text: 'Any page section' }),
+      ...of('context').map(option),
+    );
+
+    // Typing suggestions: every name, plus the other words each answers to.
+    const seen = new Set();
+    els.suggest.replaceChildren(...WORDS.flatMap((c) => [c.name, ...(c.aliases || [])]
+      .filter((term) => !seen.has(term.toLowerCase()) && seen.add(term.toLowerCase()))
+      .map((term) => el('option', { value: term }))));
+  }
+
   /* ---------- Search ---------- */
 
-  function matches(cat, query) {
-    if (!query) return true;
-    const hay = [cat.name, cat.id, ...(cat.aliases || [])].join(' ').toLowerCase();
-    if (hay.includes(query)) return true;
-    // "pricing page" still finds Pricing: any longer query word will do.
-    return query.split(/\s+/).some((w) => w.length >= 4 && hay.includes(w));
+  /** The category a search means, or null. An exact name or alias wins;
+      otherwise the one matching the most (and longest) query words, so
+      "pricing page" lands on Pricing rather than on every "page". */
+  function resolve(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) return null;
+    const terms = (c) => [c.name, c.id, ...(c.aliases || [])].map((t) => t.toLowerCase());
+
+    const exact = WORDS.find((c) => terms(c).includes(q));
+    if (exact) return exact;
+
+    const words = q.split(/\s+/).filter((w) => w.length >= 3);
+    let best = null;
+    let bestScore = 0;
+    WORDS.forEach((c) => {
+      const hay = terms(c).join(' ');
+      const score = hay.includes(q) ? 100 : words.reduce((s, w) => s + (hay.includes(w) ? w.length : 0), 0);
+      if (score > bestScore) { best = c; bestScore = score; }
+    });
+    return best;
   }
 
-  function currentMatches() {
-    const q = els.input.value.trim().toLowerCase();
-    return WORDS.filter((c) => matches(c, q));
-  }
-
-  /* ---------- Selection ---------- */
-
-  function toggle(id) {
-    if (picks.includes(id)) {
-      picks = picks.filter((p) => p !== id);
-    } else if (picks.length >= MAX_PICKS) {
-      toast('You can pick up to three. Remove one first.');
-      return;
-    } else {
-      picks.push(id);
+  /** Puts a category in the right dropdown. A mood fills the first empty mood
+      slot, else replaces the last one showing. */
+  function place(cat) {
+    let slot = cat.group === 'industry' ? 'industry' : cat.group === 'context' ? 'context' : null;
+    if (!slot) {
+      if (picks.mood1 === cat.id || picks.mood2 === cat.id) return;
+      if (!picks.mood1) slot = 'mood1';
+      else if (showMood2 && !picks.mood2) slot = 'mood2';
+      else slot = showMood2 ? 'mood2' : 'mood1';
     }
-    const url = new URL(location.href);
-    if (picks.length) url.searchParams.set('w', picks.join(','));
-    else url.searchParams.delete('w');
-    history.replaceState(null, '', url);
-    render();
+    picks[slot] = cat.id;
+    toast(`${GROUP_LABEL[cat.group]}: ${cat.name}`);
   }
 
   /* ---------- Rendering ---------- */
 
-  function renderSelected() {
-    els.selected.hidden = picks.length === 0;
-    els.selectedChips.replaceChildren(...picks.map((id) => {
-      const cat = byId.get(id);
-      const remove = el('button', { type: 'button', 'aria-label': `Remove ${cat.name}`, text: '×' });
-      remove.addEventListener('click', () => toggle(id));
-      return el('span', { class: 'sel-chip' }, [
-        el('span', {}, [
-          el('span', { class: 'sel-chip-group', text: `${GROUP_LABEL[cat.group]}: ` }),
-          document.createTextNode(cat.name),
-        ]),
-        remove,
-      ]);
-    }));
+  function renderPickers() {
+    SLOTS.forEach((s) => { els.selects[s].value = picks[s]; });
+    els.mood2Field.hidden = !showMood2;
+    els.addMood.hidden = showMood2 || !picks.mood1;
+    els.clear.hidden = pickedIds().length === 0;
   }
 
   function renderResults() {
-    const cats = picks.map((id) => byId.get(id));
+    const cats = pickedIds().map((id) => byId.get(id));
 
     // Words that turn up in more than one pick are the heart of a blend.
     const counts = new Map();
@@ -202,59 +259,15 @@
       ]));
     }
 
-    els.results.style.setProperty('--cols', Math.max(cats.length, 1));
+    // Two cards side by side at most: four picks would make columns too narrow.
+    els.results.style.setProperty('--cols', Math.min(Math.max(cats.length, 1), 2));
     els.results.replaceChildren(...nodes);
   }
 
-  function catChip(cat) {
-    const btn = el('button', {
-      type: 'button',
-      class: 'cat-chip',
-      'aria-pressed': String(picks.includes(cat.id)),
-      text: cat.name,
-    });
-    btn.addEventListener('click', () => toggle(cat.id));
-    return el('li', {}, [btn]);
-  }
-
-  function renderBrowse() {
-    const shown = currentMatches();
-    const q = els.input.value.trim();
-
-    const groups = GROUPS.map(({ key, title }) => {
-      const cats = shown.filter((c) => c.group === key);
-      if (!cats.length) return null;
-
-      // Industries split professional services out into its own list.
-      const subs = key === 'industry'
-        ? [
-          ['Professional services', cats.filter((c) => c.parent === 'professional-services')],
-          ['Other industries', cats.filter((c) => c.parent !== 'professional-services')],
-        ].filter(([, list]) => list.length)
-        : [[null, cats]];
-
-      return el('section', { class: 'browse-group' }, [
-        el('h2', { text: title }),
-        ...subs.map(([subTitle, list]) => el('div', { class: 'browse-sub' }, [
-          subTitle ? el('h3', { text: subTitle }) : null,
-          el('ul', { class: 'chip-row' }, list.map(catChip)),
-        ])),
-      ]);
-    }).filter(Boolean);
-
-    els.browse.replaceChildren(...groups);
-    els.browse.hidden = groups.length === 0;
-
-    els.noMatch.hidden = shown.length > 0;
-    if (!shown.length) {
-      els.noMatchText.textContent = `No category for “${q}” yet. Datamuse can suggest related words, though they're rougher than the lists here.`;
-    }
-  }
-
   function render() {
-    renderSelected();
+    renderPickers();
     renderResults();
-    renderBrowse();
+    syncUrl();
   }
 
   /* ---------- Datamuse fallback ---------- */
@@ -307,31 +320,69 @@
 
   /* ---------- Events ---------- */
 
-  els.input.addEventListener('input', () => {
-    els.dmResults.replaceChildren();
-    renderBrowse();
-  });
-
-  // Enter picks the only match, or looks the term up when nothing matches.
-  els.form.addEventListener('submit', (e) => {
-    e.preventDefault();
+  // Enter, or picking a suggestion, sets the matching dropdown. No match
+  // offers Datamuse instead.
+  function search() {
     const term = els.input.value.trim();
     if (!term) return;
-    const shown = currentMatches();
-    if (shown.length === 1) {
-      if (!picks.includes(shown[0].id)) toggle(shown[0].id);
+    const cat = resolve(term);
+    els.dmResults.replaceChildren();
+    if (cat) {
+      els.noMatch.hidden = true;
       els.input.value = '';
-      renderBrowse();
-    } else if (shown.length === 0) {
-      lookUp(term);
+      place(cat);
+      render();
+    } else {
+      els.noMatch.hidden = false;
+      els.noMatchText.textContent = `No category for “${term}” yet. Datamuse can suggest related words, though they're rougher than the lists here.`;
     }
+  }
+
+  els.form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    search();
+  });
+
+  // A suggestion chosen from the list fires `input` with an exact value;
+  // ordinary typing only hides an old "no match" message.
+  els.input.addEventListener('input', (e) => {
+    const fromList = e.inputType === 'insertReplacementText' || !e.inputType;
+    const q = els.input.value.trim().toLowerCase();
+    const isTerm = WORDS.some((c) => [c.name, ...(c.aliases || [])].some((t) => t.toLowerCase() === q));
+    if (fromList && isTerm) {
+      search();
+      return;
+    }
+    els.noMatch.hidden = true;
   });
 
   els.dmBtn.addEventListener('click', () => lookUp(els.input.value.trim()));
 
+  SLOTS.forEach((slot) => {
+    els.selects[slot].addEventListener('change', () => {
+      picks[slot] = els.selects[slot].value;
+      if (slot === 'mood2' && !picks.mood2) showMood2 = false;
+      // Clearing the first mood moves the second one up.
+      if (slot === 'mood1' && !picks.mood1 && picks.mood2) {
+        picks.mood1 = picks.mood2;
+        picks.mood2 = '';
+        showMood2 = false;
+      }
+      render();
+    });
+  });
+
+  els.addMood.addEventListener('click', () => {
+    showMood2 = true;
+    renderPickers();
+    els.selects.mood2.focus();
+  });
+
   els.clear.addEventListener('click', () => {
-    [...picks].forEach(toggle);
-    els.input.focus();
+    SLOTS.forEach((s) => { picks[s] = ''; });
+    showMood2 = false;
+    render();
+    els.selects.mood1.focus();
   });
 
   // One listener copies any word chip on the page, Datamuse ones included.
@@ -340,5 +391,23 @@
     if (chip) copy(chip.dataset.copy);
   });
 
+  /* ---------- Sticky bar ----------
+     The search and dropdowns pin under the nav, whose height changes with
+     the screen width (and when its menu opens), so it is measured rather
+     than guessed. */
+  const nav = document.querySelector('.site-nav');
+  const root = document.documentElement;
+  const measure = () => {
+    root.style.setProperty('--nav-h', `${nav ? nav.offsetHeight : 0}px`);
+    root.style.setProperty('--search-h', `${els.form.offsetHeight}px`);
+  };
+  if ('ResizeObserver' in window) {
+    const ro = new ResizeObserver(measure);
+    if (nav) ro.observe(nav);
+    ro.observe(els.form);
+  }
+  measure();
+
+  fillSelects();
   render();
 })();

@@ -56,7 +56,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../shared.css?v=4.3.0">
-<link rel="stylesheet" href="style.css?v=4.3.0">
+<link rel="stylesheet" href="style.css?v=4.4.0">
 <!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
 <script src="../theme.js?v=4.3.0"></script>
 <!-- Google Analytics (GA4) -->
@@ -77,28 +77,38 @@
 
 <main class="wb">
 
-  <!-- Search filters the categories below as you type. A search that matches
-       no category offers rougher suggestions from Datamuse instead. -->
+  <!-- The search and the dropdowns stay pinned under the nav while the results
+       scroll (on phones only the dropdowns do). A search that matches a
+       category sets its dropdown; one that matches nothing offers Datamuse. -->
   <form id="search-form" class="wb-search" role="search">
     <label class="wb-label" for="search-input">Search a mood, industry or page section</label>
-    <div class="wb-search-row">
-      <input type="search" id="search-input" autocomplete="off" spellcheck="false"
-             placeholder="luxury, accounting, pricing page…">
-    </div>
-    <p class="wb-hint">Pick up to three, for example an industry, a mood and a page section. Click any word to copy it.</p>
+    <input type="search" id="search-input" list="search-suggest" autocomplete="off" spellcheck="false"
+           placeholder="luxury, attorney, pricing page…">
+    <datalist id="search-suggest"></datalist>
   </form>
 
-  <!-- What is selected. Empty until the first pick. -->
-  <section id="selected" class="wb-selected" aria-label="Selected categories" hidden>
-    <div id="selected-chips" class="wb-selected-chips"></div>
-    <button type="button" id="clear-btn" class="btn-link">Clear all</button>
+  <section class="wb-pickers" aria-label="Categories">
+    <div class="picker">
+      <label class="wb-label" for="pick-mood1">Mood</label>
+      <select id="pick-mood1" data-slot="mood1"></select>
+      <button type="button" id="add-mood-btn" class="btn-link" hidden>+ Add a second mood</button>
+    </div>
+    <div class="picker" id="mood2-field" hidden>
+      <label class="wb-label" for="pick-mood2">Second mood</label>
+      <select id="pick-mood2" data-slot="mood2"></select>
+    </div>
+    <div class="picker">
+      <label class="wb-label" for="pick-industry">Industry</label>
+      <select id="pick-industry" data-slot="industry"></select>
+    </div>
+    <div class="picker">
+      <label class="wb-label" for="pick-context">Page section</label>
+      <select id="pick-context" data-slot="context"></select>
+    </div>
+    <button type="button" id="clear-btn" class="btn-link wb-clear" hidden>Clear all</button>
   </section>
 
-  <!-- Results for the selection, one card per category, then the combined avoid list. -->
-  <section id="results" class="wb-results"></section>
-
-  <!-- Every category, grouped. Filtered by the search box. -->
-  <section id="browse" class="wb-browse" aria-label="All categories"></section>
+  <p class="wb-hint">Pick up to two moods, an industry and a page section. Click any word to copy it.</p>
 
   <!-- Shown when a search matches no category. -->
   <section id="no-match" class="wb-no-match" hidden>
@@ -106,6 +116,9 @@
     <button type="button" id="datamuse-btn" class="btn btn-secondary">Find rough suggestions</button>
     <div id="datamuse-results"></div>
   </section>
+
+  <!-- Results for the selection, one card per category, then the combined avoid list. -->
+  <section id="results" class="wb-results"></section>
 
 </main>
 
@@ -115,10 +128,10 @@
 <!-- Licensing bar, filled in by sitebar.js. -->
 <footer class="site-bar" data-root-prefix="../"></footer>
 
-<script src="data/moods.js?v=4.3.0"></script>
-<script src="data/industries.js?v=4.3.0"></script>
-<script src="data/contexts.js?v=4.3.0"></script>
-<script src="script.js?v=4.3.0"></script>
+<script src="data/moods.js?v=4.4.0"></script>
+<script src="data/industries.js?v=4.4.0"></script>
+<script src="data/contexts.js?v=4.4.0"></script>
+<script src="script.js?v=4.4.0"></script>
 <script src="../nav.js?v=4.3.0"></script>
 <script src="../sitebar.js?v=4.3.0"></script>
 </body>

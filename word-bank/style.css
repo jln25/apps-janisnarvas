@@ -29,7 +29,22 @@ h2, h3 { margin: 0; line-height: 1.2; }
 
 /* ---------- Search ---------- */
 
-.wb-search { display: flex; flex-direction: column; gap: 8px; }
+.wb-search,
+.wb-pickers {
+  position: sticky;
+  z-index: 40;              /* under the nav (50), over the results */
+  background: var(--color-bg);
+}
+
+/* script.js measures the nav and the search block, since both change
+   height with the screen width. */
+.wb-search {
+  top: var(--nav-h, 0px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+}
 
 .wb-label { font-size: 14px; font-weight: 600; }
 
@@ -49,6 +64,43 @@ h2, h3 { margin: 0; line-height: 1.2; }
   outline: none;
   border-color: var(--color-primary);
 }
+
+/* ---------- Dropdowns ---------- */
+
+.wb-pickers {
+  top: calc(var(--nav-h, 0px) + var(--search-h, 0px));
+  margin-top: -24px;        /* sits 8px under the search, not a full gap */
+  padding: 8px 0 16px;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 16px;
+  align-items: flex-start;
+}
+
+.picker { flex: 1 1 180px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+.picker select {
+  width: 100%;
+  height: 48px;
+  padding: 0 12px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.picker select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.picker .btn-link { align-self: flex-start; padding: 4px 0; }
+
+.wb-clear { flex: none; align-self: flex-end; padding: 12px 0; }
 
 .wb-hint { margin: 0; font-size: 14px; color: var(--color-text-muted); }
 
@@ -95,31 +147,6 @@ h2, h3 { margin: 0; line-height: 1.2; }
 
 /* ---------- Chips ---------- */
 
-/* Category chips, in the browse lists. Pressed = selected. */
-.cat-chip {
-  padding: 8px 12px;
-  font: inherit;
-  font-size: 14px;
-  color: var(--color-text);
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-}
-
-.cat-chip:hover {
-  background: var(--color-hover);
-  border-color: var(--color-hover);
-  color: var(--color-hover-text);
-}
-
-.cat-chip[aria-pressed="true"] {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-on-primary);
-  font-weight: 600;
-}
-
 /* Word chips, in the results. Click copies. */
 .word-chip {
   padding: 4px 12px;
@@ -159,50 +186,10 @@ h2, h3 { margin: 0; line-height: 1.2; }
   outline-offset: 2px;
 }
 
-/* ---------- Selection ---------- */
-
-.wb-selected {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-}
-
-.wb-selected-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-
-/* A pill with the name and a remove control. */
-.sel-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 4px 4px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border-radius: var(--radius-full);
-}
-
-.sel-chip-group { font-weight: 400; }
-
-.sel-chip button {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: inherit;
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.sel-chip button:hover { background: rgba(0, 0, 0, 0.12); }
-
 /* ---------- Results ---------- */
 
-/* One column per pick (script.js sets --cols), so one pick fills the width
-   and three sit side by side for comparison. */
+/* One column per pick, two at most (script.js sets --cols): one pick fills
+   the width, two sit side by side, and more wrap into further rows. */
 .wb-results {
   display: grid;
   grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
@@ -236,7 +223,7 @@ h2, h3 { margin: 0; line-height: 1.2; }
 .word-section { display: flex; flex-direction: column; gap: 8px; }
 
 .word-section h3 {
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -271,38 +258,6 @@ h2, h3 { margin: 0; line-height: 1.2; }
 
 .avoid-reason { color: var(--color-text-muted); }
 
-/* ---------- Browse ---------- */
-
-.wb-browse {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  align-items: start;
-}
-
-.browse-group {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-sm);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.browse-group h2 { font-size: 20px; }
-
-.browse-sub { display: flex; flex-direction: column; gap: 8px; }
-
-.browse-sub h3 {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-text-muted);
-}
-
 /* ---------- No match / Datamuse ---------- */
 
 .wb-no-match { display: flex; flex-direction: column; gap: 16px; }
@@ -331,13 +286,31 @@ h2, h3 { margin: 0; line-height: 1.2; }
 /* ---------- Small screens ---------- */
 
 @media (max-width: 900px) {
-  .wb-browse { grid-template-columns: 1fr 1fr; }
   .wb-results { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 640px) {
   .wb { padding: 0 16px 48px; gap: 24px; }
-  .wb-browse { grid-template-columns: 1fr; }
+  /* On phones only the dropdowns stay pinned: the search scrolls away, and
+     the visible labels give way to each list's own "Any …" wording. */
+  .wb-search { position: static; }
+  .wb-pickers {
+    top: var(--nav-h, 0px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding-bottom: 8px;
+  }
+  /* A short line of its own, right-aligned, rather than a full row. */
+  .wb-clear { grid-column: 1 / -1; justify-self: end; padding: 0; }
+  .picker .wb-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
   .card { padding: 24px; }
 }
 
