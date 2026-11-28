@@ -16,8 +16,9 @@ body { font-size: 16px; }
 
 /* ---------- Page ---------- */
 
+/* 1000px, in line with the other tools (920–1024px). */
 .wb {
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 0 24px 64px;
   display: flex;
@@ -26,6 +27,15 @@ body { font-size: 16px; }
 }
 
 h2, h3 { margin: 0; line-height: 1.2; }
+
+/* ---------- Intro ---------- */
+
+.wb-intro {
+  max-width: 680px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
 
 /* ---------- Search ---------- */
 
@@ -101,8 +111,6 @@ h2, h3 { margin: 0; line-height: 1.2; }
 .picker .btn-link { align-self: flex-start; padding: 4px 0; }
 
 .wb-clear { flex: none; align-self: flex-end; padding: 12px 0; }
-
-.wb-hint { margin: 0; font-size: 14px; color: var(--color-text-muted); }
 
 /* ---------- Buttons ---------- */
 
