@@ -1,0 +1,421 @@
+/* ==========================================================================
+   Word Bank — styles
+   Follows DESIGN.md: the site palette, a 4px spacing scale
+   (4/8/12/16/24/32/48/64), the 12–48px type scale, and per-element radii.
+   Word chips are dense in-row controls, so like the planner's selects they
+   stay compact rather than taking the 48px button height.
+   ========================================================================== */
+
+:root {
+  --color-primary: #50ebec;
+  --color-tertiary: #F09B48;
+  --color-bg: #FFF8F0;
+  --color-surface: #FFFFFF;
+  --color-border: #E0D5C7;
+  --color-text: #1A1A1A;
+  --color-text-muted: #6B6B6B;
+  --color-on-primary: #1A1A1A;
+  --color-link: #1D6B77;
+
+  /* Button hover, taken from the footer band, always with a near-black label. */
+  --color-hover: #36a8a8;
+  --color-hover-text: #1A1A1A;
+  --color-bar-bg: #36a8a8;
+  --color-bar-text: #1a1a1a;
+  --banner-from: #217582;
+  --banner-to: #185861;
+  --on-banner: #ffffff;
+
+  --radius-sm: 4px;
+  --radius: 12px;
+  --radius-lg: 24px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme="dark"] {
+  --color-bg: #1A1714;
+  --color-surface: #242019;
+  --color-border: #3A332A;
+  --color-text: #F5EFE6;
+  --color-text-muted: #A79E92;
+  --color-link: #50ebec;
+
+  --color-bar-bg: #234242;
+  --color-bar-text: #e6e3dc;
+  --banner-from: #2b5050;
+  --banner-to: #1a3333;
+  --on-banner: #f2f2ec;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+/* The `hidden` attribute must always win over any display rule. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* The nav's theme switch. shared.css carries only its hover state. */
+.theme-toggle {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* ---------- Banner ---------- */
+
+.tool-banner {
+  background: linear-gradient(135deg, var(--banner-from), var(--banner-to));
+  color: var(--on-banner);
+  margin-bottom: 32px;
+}
+
+/* ---------- Page ---------- */
+
+.wb {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+h2, h3 { margin: 0; line-height: 1.2; }
+
+/* ---------- Search ---------- */
+
+.wb-search { display: flex; flex-direction: column; gap: 8px; }
+
+.wb-label { font-size: 14px; font-weight: 600; }
+
+.wb-search input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.wb-search input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.wb-hint { margin: 0; font-size: 14px; color: var(--color-text-muted); }
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  min-height: 48px;
+  padding: 12px 24px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn:hover { transform: scale(1.02); }
+
+.btn-secondary {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+  align-self: flex-start;
+}
+
+.btn-secondary:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-link);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ---------- Chips ---------- */
+
+/* Category chips, in the browse lists. Pressed = selected. */
+.cat-chip {
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.cat-chip:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
+
+.cat-chip[aria-pressed="true"] {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-weight: 600;
+}
+
+/* Word chips, in the results. Click copies. */
+.word-chip {
+  padding: 4px 12px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: copy;
+}
+
+.word-chip:hover {
+  background: var(--color-hover);
+  border-color: var(--color-hover);
+  color: var(--color-hover-text);
+}
+
+/* In more than one of the picks: marked by weight and a primary underline,
+   not by colour alone. */
+.word-chip.is-shared {
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--color-primary);
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: 2px;
+}
+
+/* ---------- Selection ---------- */
+
+.wb-selected {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.wb-selected-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* A pill with the name and a remove control. */
+.sel-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border-radius: var(--radius-full);
+}
+
+.sel-chip-group { font-weight: 400; }
+
+.sel-chip button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sel-chip button:hover { background: rgba(0, 0, 0, 0.12); }
+
+/* ---------- Results ---------- */
+
+/* One column per pick (script.js sets --cols), so one pick fills the width
+   and three sit side by side for comparison. */
+.wb-results {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  gap: 24px;
+}
+
+.wb-results:empty { display: none; }
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.card-kicker {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.card h2 { font-size: 24px; }
+
+.word-section { display: flex; flex-direction: column; gap: 8px; }
+
+.word-section h3 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.shared-note {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+/* The combined avoid list spans the full width under the cards. */
+.card-avoid {
+  grid-column: 1 / -1;
+  border-left: 4px solid var(--color-tertiary);
+}
+
+.avoid-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px 32px;
+}
+
+.avoid-list li { font-size: 16px; }
+
+.avoid-word { font-weight: 600; }
+
+.avoid-reason { color: var(--color-text-muted); }
+
+/* ---------- Browse ---------- */
+
+.wb-browse {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.browse-group {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.browse-group h2 { font-size: 20px; }
+
+.browse-sub { display: flex; flex-direction: column; gap: 8px; }
+
+.browse-sub h3 {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* ---------- No match / Datamuse ---------- */
+
+.wb-no-match { display: flex; flex-direction: column; gap: 16px; }
+
+.wb-no-match p { margin: 0; }
+
+.dm-status { color: var(--color-text-muted); }
+
+/* ---------- Toast ---------- */
+
+.wb-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  z-index: 60;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 900px) {
+  .wb-browse { grid-template-columns: 1fr 1fr; }
+  .wb-results { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .wb { padding: 0 16px 48px; gap: 24px; }
+  .wb-browse { grid-template-columns: 1fr; }
+  .card { padding: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+}

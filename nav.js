@@ -14,13 +14,14 @@
 
 (() => {
   // Bumped with the rest of the site's assets.
-  const ASSET_V = '4.1.0';
+  const ASSET_V = '4.2.0';
 
   const LINKS = [
     { label: 'Study Tracker', path: 'study-tracker/' },
     { label: 'Reading Notebook', path: 'reading-notebook/' },
     { label: 'BAMS Planner', path: 'bams-planner/' },
     { label: 'Copy Cat', path: 'copy-cat/' },
+    { label: 'Word Bank', path: 'word-bank/' },
   ];
 
   /* Which link is the page we are on. Compared on the resolved pathname so a

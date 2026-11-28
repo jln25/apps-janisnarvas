@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janis Narvas | Word Bank</title>
+<meta name="description" content="Words, phrases and words to avoid for any brand mood, industry or page section. A free word bank for copywriters, no login.">
+<link rel="canonical" href="https://apps.janisnarvas.com/word-bank/">
+
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Study Apps">
+<meta property="og:title" content="Janis Narvas | Word Bank">
+<meta property="og:description" content="Words, phrases and words to avoid for any brand mood, industry or page section. A free word bank for copywriters, no login.">
+<meta property="og:url" content="https://apps.janisnarvas.com/word-bank/">
+<meta property="og:image" content="https://apps.janisnarvas.com/icons/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Janis Narvas | Word Bank">
+<meta name="twitter:description" content="Words, phrases and words to avoid for any brand mood, industry or page section. A free word bank for copywriters, no login.">
+<meta name="twitter:image" content="https://apps.janisnarvas.com/icons/og-image.png">
+
+<!-- Structured data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Word Bank",
+  "url": "https://apps.janisnarvas.com/word-bank/",
+  "description": "Words, phrases and words to avoid for any brand mood, industry or page section. A free word bank for copywriters, no login.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "PHP"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Janis Narvas",
+    "url": "https://janisnarvas.com"
+  },
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Study Apps",
+    "url": "https://apps.janisnarvas.com/"
+  }
+}
+</script>
+<link rel="icon" type="image/png" sizes="32x32" href="../icons/favicon-32.png?v=4.2.0">
+<link rel="icon" type="image/png" sizes="512x512" href="../icons/favicon-512.png?v=4.2.0">
+<link rel="apple-touch-icon" href="../icons/apple-touch-icon.png?v=4.2.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared.css?v=4.2.0">
+<link rel="stylesheet" href="style.css?v=4.2.0">
+<!-- Loaded in <head> so the theme is set before first paint (no light flash). -->
+<script src="../theme.js?v=4.2.0"></script>
+<!-- Google Analytics (GA4) -->
+<script src="../analytics.js?v=4.2.0"></script>
+</head>
+<body>
+
+<!-- Sticky navigation, filled in by nav.js. -->
+<nav class="site-nav" data-root-prefix="../"></nav>
+
+<!-- Names the tool; the page's H1 lives here. -->
+<section class="tool-banner">
+  <div class="tool-banner-inner">
+    <h1>Word Bank</h1>
+    <p class="tool-desc">Words, phrases and words to avoid for any mood, industry or page section.</p>
+  </div>
+</section>
+
+<main class="wb">
+
+  <!-- Search filters the categories below as you type. A search that matches
+       no category offers rougher suggestions from Datamuse instead. -->
+  <form id="search-form" class="wb-search" role="search">
+    <label class="wb-label" for="search-input">Search a mood, industry or page section</label>
+    <div class="wb-search-row">
+      <input type="search" id="search-input" autocomplete="off" spellcheck="false"
+             placeholder="luxury, accounting, pricing page…">
+    </div>
+    <p class="wb-hint">Pick up to three, for example an industry, a mood and a page section. Click any word to copy it.</p>
+  </form>
+
+  <!-- What is selected. Empty until the first pick. -->
+  <section id="selected" class="wb-selected" aria-label="Selected categories" hidden>
+    <div id="selected-chips" class="wb-selected-chips"></div>
+    <button type="button" id="clear-btn" class="btn-link">Clear all</button>
+  </section>
+
+  <!-- Results for the selection, one card per category, then the combined avoid list. -->
+  <section id="results" class="wb-results"></section>
+
+  <!-- Every category, grouped. Filtered by the search box. -->
+  <section id="browse" class="wb-browse" aria-label="All categories"></section>
+
+  <!-- Shown when a search matches no category. -->
+  <section id="no-match" class="wb-no-match" hidden>
+    <p id="no-match-text"></p>
+    <button type="button" id="datamuse-btn" class="btn btn-secondary">Find rough suggestions</button>
+    <div id="datamuse-results"></div>
+  </section>
+
+</main>
+
+<!-- Confirms a copied word. -->
+<div id="toast" class="wb-toast" role="status" aria-live="polite" hidden></div>
+
+<!-- Licensing bar, filled in by sitebar.js. -->
+<footer class="site-bar" data-root-prefix="../"></footer>
+
+<script src="data/moods.js?v=4.2.0"></script>
+<script src="data/industries.js?v=4.2.0"></script>
+<script src="data/contexts.js?v=4.2.0"></script>
+<script src="script.js?v=4.2.0"></script>
+<script src="../nav.js?v=4.2.0"></script>
+<script src="../sitebar.js?v=4.2.0"></script>
+</body>
+</html>

@@ -29,6 +29,12 @@ const TOOLS = [
     path: 'copy-cat/',
     icon: '🐈',
   },
+  {
+    name: 'Word Bank',
+    description: 'Words and phrases for any brand mood, industry or page section.',
+    path: 'word-bank/',
+    icon: '🔤',
+  },
 ];
 
 const grid = document.getElementById('tool-grid');

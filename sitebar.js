@@ -16,7 +16,7 @@
   const SITE = 'https://janisnarvas.com';
 
   // Bumped with the rest of the site's assets; see the README.
-  const ASSET_V = '4.1.0';
+  const ASSET_V = '4.2.0';
 
   const SOCIALS = [
     { href: 'mailto:jlnarvas2@up.edu.ph', icon: 'email.png', label: 'Email' },

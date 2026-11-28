@@ -10,6 +10,7 @@ shared online in case they can be useful to anyone else.
 | [Study Tracker](https://apps.janisnarvas.com/study-tracker/) | Assignments and deadlines in a calendar or list view, with priorities, statuses and `.ics` export |
 | [Reading Notebook](https://apps.janisnarvas.com/reading-notebook/) | Tagged notes on academic sources, exportable to Markdown for Obsidian or to CSV |
 | [BAMS Planner](https://apps.janisnarvas.com/bams-planner/) | Degree planner for the UPOU BAMS curriculum: units by category, courses by term, prerequisite checks, CSV and PDF export ([guide](https://apps.janisnarvas.com/bams-planner/guide.html)) |
+| [Word Bank](https://apps.janisnarvas.com/word-bank/) | Words, phrases and words to avoid for any brand mood, industry or page section |
 
 ## Licence
 
