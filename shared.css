@@ -273,6 +273,38 @@ body {
   list-style: none;
 }
 
+/* The links list now holds two groups rather than five links. Each group is a
+   row of its own, and the second one carries the divider that states the
+   split without costing any vertical space. */
+.site-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.site-nav-group + .site-nav-group {
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid var(--color-border);
+}
+.site-nav-sublist {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Undrawn on desktop, but still in the DOM: aria-labelledby points at it, so
+   removing it would take the group's name away from screen readers too. */
+.site-nav-group-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .site-nav-links a {
   display: block;
   padding: 10px 12px;
@@ -363,6 +395,40 @@ body {
     border-top: 1px solid var(--color-border);
   }
   .site-nav.is-open .site-nav-links { display: flex; }
+
+  /* The panel has the vertical room the bar does not, so the groups stack and
+     their labels are drawn properly instead of leaning on a divider. */
+  .site-nav-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+  .site-nav-group + .site-nav-group {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+    margin-top: 12px;
+  }
+  .site-nav-sublist {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+  /* Out of the clipped box and back into the layout, styled to match the
+     footer's column headings so the two read as the same kind of label. */
+  .site-nav-group-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
 
   .site-nav-links a { padding: 12px; font-size: 0.95rem; }
   .site-nav-links a.is-current {

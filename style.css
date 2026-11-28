@@ -105,6 +105,24 @@ main {
   border: 0.5px solid var(--color-border);
 }
 
+/* The two audience groups, stacked. 48px between them rather than the grid's
+   own 32px, so the gap between groups reads as larger than the gap between
+   cards — otherwise the heading looks attached to nothing in particular. */
+.tool-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.tool-group-heading {
+  margin: 0 0 16px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
 /* Two up on desktop rather than auto-fit: with four tools that gives a square
    2x2 block, where auto-fit was fitting three across and orphaning the last. */
 .tool-grid {

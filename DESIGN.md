@@ -95,13 +95,22 @@ buttons and inputs follow the spec; in-row controls stay compact.
 Every page reads in this order:
 
 ```
-nav           sticky, logo + links + theme toggle, hamburger below 640px
+nav           sticky, logo + grouped links + theme toggle, hamburger below 640px
 banner        gradient band carrying the page's single H1 and a one-line description
 tool          the page's own actions, then its content
 footer        teal band: logo, place, three licence terms, contact icons
 ```
 
 One H1 per page, and it lives in the banner.
+
+Tools are grouped by audience — **For students** and **For content writers** —
+in the nav and on the home grid. The group labels are drawn in the mobile nav
+panel and above the home cards; on the desktop nav bar a divider carries the
+split instead, because the bar is sticky and headings would cost height on
+every page. The labels still exist for screen readers at both widths.
+
+The split is declared twice: `LINK_GROUPS` in `nav.js` and `TOOL_GROUPS` in
+`script.js`. A new tool goes in both.
 
 ## Conventions
 

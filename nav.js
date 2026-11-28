@@ -14,14 +14,26 @@
 
 (() => {
   // Bumped with the rest of the site's assets.
-  const ASSET_V = '4.3.0';
+  const ASSET_V = '4.4.0';
 
-  const LINKS = [
-    { label: 'Study Tracker', path: 'study-tracker/' },
-    { label: 'Reading Notebook', path: 'reading-notebook/' },
-    { label: 'BAMS Planner', path: 'bams-planner/' },
-    { label: 'Copy Cat', path: 'copy-cat/' },
-    { label: 'Word Bank', path: 'word-bank/' },
+  /* Grouped by who the tool is for. The same split is drawn on the home page
+     by TOOLS in script.js — a new tool goes in both, as it always has. */
+  const LINK_GROUPS = [
+    {
+      label: 'For students',
+      links: [
+        { label: 'Study Tracker', path: 'study-tracker/' },
+        { label: 'Reading Notebook', path: 'reading-notebook/' },
+        { label: 'BAMS Planner', path: 'bams-planner/' },
+      ],
+    },
+    {
+      label: 'For content writers',
+      links: [
+        { label: 'Copy Cat', path: 'copy-cat/' },
+        { label: 'Word Bank', path: 'word-bank/' },
+      ],
+    },
   ];
 
   /* Which link is the page we are on. Compared on the resolved pathname so a
@@ -33,24 +45,52 @@
     return strip(here.pathname) === strip(target.pathname);
   }
 
+  function buildLink(prefix, item) {
+    const href = `${prefix}${item.path}` || './';
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = href;
+    a.textContent = item.label;
+    if (isCurrent(href)) {
+      a.className = 'is-current';
+      // Tells a screen reader which page this is, not just which link looks lit.
+      a.setAttribute('aria-current', 'page');
+    }
+    li.appendChild(a);
+    return li;
+  }
+
+  /* A list of groups, each holding its own list of links. The group labels are
+     drawn only in the mobile panel — on the desktop row a divider carries the
+     split instead, because a bar tall enough for headings is a bar that eats
+     the top of every page, and this nav is sticky.
+
+     The label still exists on desktop, just undrawn, and each group's list
+     points at it with aria-labelledby. A screen reader therefore announces
+     "For students, list, 3 items" at both widths: the grouping is information,
+     so it should not be visual-only. */
   function buildLinks(prefix, id) {
     const list = document.createElement('ul');
     list.className = 'site-nav-links';
     list.id = id;
 
-    LINKS.forEach((item) => {
-      const href = `${prefix}${item.path}` || './';
-      const li = document.createElement('li');
-      const a = document.createElement('a');
-      a.href = href;
-      a.textContent = item.label;
-      if (isCurrent(href)) {
-        a.className = 'is-current';
-        // Tells a screen reader which page this is, not just which link looks lit.
-        a.setAttribute('aria-current', 'page');
-      }
-      li.appendChild(a);
-      list.appendChild(li);
+    LINK_GROUPS.forEach((group, groupIndex) => {
+      const groupItem = document.createElement('li');
+      groupItem.className = 'site-nav-group';
+
+      const labelId = `${id}-group-${groupIndex}`;
+      const label = document.createElement('span');
+      label.className = 'site-nav-group-label';
+      label.id = labelId;
+      label.textContent = group.label;
+
+      const sublist = document.createElement('ul');
+      sublist.className = 'site-nav-sublist';
+      sublist.setAttribute('aria-labelledby', labelId);
+      group.links.forEach((item) => sublist.appendChild(buildLink(prefix, item)));
+
+      groupItem.append(label, sublist);
+      list.appendChild(groupItem);
     });
 
     return list;
