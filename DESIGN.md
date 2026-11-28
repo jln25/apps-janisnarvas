@@ -64,6 +64,10 @@ The footer's 30px top padding is a deliberate exception, asked for directly.
 | Modals, containers | `--radius-lg` | 24px |
 | Pills, avatars | `--radius-full` | 9999px |
 
+**One exception, asked for directly:** Word Bank's search box and dropdowns
+use `--radius` (12px), so its control bar reads as rounded. Inputs elsewhere
+keep 4px.
+
 ## Shadows
 
 | Token | Value |

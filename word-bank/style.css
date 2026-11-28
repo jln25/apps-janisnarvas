@@ -67,7 +67,7 @@ h2, h3 { margin: 0; line-height: 1.2; }
   color: var(--color-text);
   background: var(--color-surface);
   border: 2px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);   /* rounded like the dropdowns; see DESIGN.md */
 }
 
 .wb-search input:focus {
@@ -99,7 +99,7 @@ h2, h3 { margin: 0; line-height: 1.2; }
   color: var(--color-text);
   background: var(--color-surface);
   border: 2px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
   cursor: pointer;
 }
 
