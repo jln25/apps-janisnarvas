@@ -37,7 +37,10 @@ let tasks = loadTasks();
 let currentView = 'calendar';       // 'calendar' | 'list'
 let calendarCursor = new Date();    // month currently shown in calendar
 calendarCursor.setDate(1);
-let weekStartsMonday = localStorage.getItem(WEEK_START_KEY) === 'true';
+// Guarded like every other read: with storage blocked (Safari's "Block all
+// cookies") an unguarded read throws and stops the whole script.
+let weekStartsMonday = false;
+try { weekStartsMonday = localStorage.getItem(WEEK_START_KEY) === 'true'; } catch { /* storage unavailable */ }
 
 /* ---------- Persistence ---------- */
 
@@ -568,13 +571,14 @@ els.taskForm.addEventListener('submit', (e) => {
   };
   if (!data.name || !data.dueDate) return;
 
-  if (id) {
-    const task = tasks.find((t) => t.id === id);
+  const task = id ? tasks.find((t) => t.id === id) : null;
+  if (task) {
     Object.assign(task, data);
     // The form is now the authoritative source for status, so drop any
     // stale "restore point" left over from an earlier quick-complete toggle.
     delete task.previousStatus;
   } else {
+    // New, or deleted in another tab while this form was open: kept as new.
     tasks.push({ id: generateId(), ...data });
   }
 
@@ -930,6 +934,17 @@ els.importIcsInput.addEventListener('change', () => {
     }
   };
   reader.readAsText(file);
+});
+
+/* ---------- Other tabs ----------
+   Every save writes the whole list, so a tab holding an old copy would wipe
+   out whatever another tab added since. When another tab saves, take its
+   list instead. (The `storage` event only fires in the other tabs.) */
+
+window.addEventListener('storage', (e) => {
+  if (e.key !== STORAGE_KEY) return;
+  tasks = loadTasks();
+  render();
 });
 
 /* ---------- Master render ---------- */

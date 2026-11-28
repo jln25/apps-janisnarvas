@@ -465,11 +465,12 @@ els.noteForm.addEventListener('submit', (e) => {
 
   if (!data.title) return;
 
-  if (id) {
-    const note = notes.find((n) => n.id === id);
+  const note = id ? notes.find((n) => n.id === id) : null;
+  if (note) {
     Object.assign(note, data);
     currentDetailId = id;
   } else {
+    // New, or deleted in another tab while this form was open: kept as new.
     const newNote = { id: generateId(), createdAt: now, ...data };
     notes.push(newNote);
     currentDetailId = newNote.id;
@@ -633,9 +634,35 @@ function csvEscape(value) {
   return str;
 }
 
+/** Today's date in the visitor's own time zone. toISOString() would give the
+    UTC date, which in the Philippines is yesterday until 8 AM. */
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
+
+/* ---------- Other tabs ----------
+   Every save writes the whole notebook, so a tab holding an old copy would
+   wipe out notes another tab added since. When another tab saves, take its
+   notebook instead. An open edit form is left alone; it saves into the fresh
+   notebook. (The `storage` event only fires in the other tabs.) */
+
+window.addEventListener('storage', (e) => {
+  if (e.key !== STORAGE_KEY) return;
+  notes = loadNotes();
+  renderTagCloud();
+  if (!els.detailView.hidden) {
+    if (notes.some((n) => n.id === currentDetailId)) {
+      openDetailView(currentDetailId);
+    } else {
+      showView('list');
+      renderListView();
+    }
+  } else if (!els.listView.hidden) {
+    renderListView();
+  }
+});
 
 /* ---------- Init ---------- */
 

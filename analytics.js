@@ -5,6 +5,9 @@
    ========================================================================== */
 
 (() => {
+  // Local previews are testing, not visitors: counting them skews the numbers.
+  if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return;
+
   const MEASUREMENT_ID = 'G-N0F0PZ1EQ7';
 
   // gtag.js is injected rather than hardcoded as a second <script> tag, which

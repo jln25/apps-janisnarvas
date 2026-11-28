@@ -23,17 +23,20 @@ const STATUS_LABELS = { '': '—', planned: 'Planned', 'in-progress': 'In progre
    ordered — which is what makes "this prerequisite is in an earlier term"
    a question the planner can actually answer.
 
-   The list always opens at Term 1 of the current calendar year regardless of
-   the month, since a plan is written forward from the start of a year. */
+   The list starts at a fixed year, the planner's first, and runs TERM_YEARS
+   past the current one. It must never start at the current year: on 1 January
+   every saved term from the year before would drop out of the list, and the
+   prerequisite checks would stop recognising them. */
 
 const TERMS_PER_YEAR = 3;   // UPOU runs trimesters
 const TERM_YEARS = 6;       // 4-year program plus headroom for a slower pace
+const FIRST_TERM_YEAR = 2026;
 
 const TERM_OPTIONS = (() => {
-  const startYear = new Date().getFullYear();
+  const endYear = new Date().getFullYear() + TERM_YEARS;
   const out = [];
-  for (let y = 0; y < TERM_YEARS; y++) {
-    for (let t = 1; t <= TERMS_PER_YEAR; t++) out.push(`${startYear + y} Term ${t}`);
+  for (let y = FIRST_TERM_YEAR; y < endYear; y++) {
+    for (let t = 1; t <= TERMS_PER_YEAR; t++) out.push(`${y} Term ${t}`);
   }
   return out;
 })();
@@ -820,9 +823,27 @@ function downloadBlob(blob, filename) {
   URL.revokeObjectURL(url);
 }
 
+/** Today's date in the visitor's own time zone. toISOString() would give the
+    UTC date, which in the Philippines is yesterday until 8 AM. */
 function todayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const p = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
+
+/* ---------- Other tabs ----------
+   Every save writes the whole plan, so a tab holding an old copy would undo
+   changes another tab made since. When another tab saves, take its plan
+   instead. (The `storage` event only fires in the other tabs.) */
+
+window.addEventListener('storage', (e) => {
+  if (e.key !== STORAGE_KEY) return;
+  courses = loadCourses();
+  renderDashboard();
+  renderTermSummary();
+  renderBackupReminder();
+  renderCourseList();
+});
 
 /* ---------- Init ---------- */
 
