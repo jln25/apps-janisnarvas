@@ -7,6 +7,108 @@
 
 * { box-sizing: border-box; }
 
+/* ---------- Site palette ----------
+   The DESIGN.md palette, defined once. Each page's own sheet loads after this
+   one and adds only what is its own (status colours, category colours…). */
+
+:root {
+  --color-primary: #50ebec;
+  --color-accent: #30A8B9;     /* Secondary */
+  --color-tertiary: #F09B48;
+  --color-bg: #FFF8F0;
+  --color-surface: #FFFFFF;
+  --color-border: #E0D5C7;
+  --color-text: #1A1A1A;
+  --color-text-muted: #6B6B6B;
+  /* Both cyans take a near-black label, never white (white on Primary is 1.45:1). */
+  --color-on-primary: #1A1A1A;
+
+  /* Secondary, deepened until it passes AA as body-sized link text on the
+     cream background: the palette's own accents top out at 2.7:1 there. */
+  --color-link: #1D6B77;
+
+  /* Button hover, taken from the footer band. One value for both themes:
+     it carries on the cream and on the dark background alike. Always a
+     fill with a near-black label (6.07:1) — as hover *text* on the cream
+     this teal is only 2.72:1 and fails AA. */
+  --color-hover: #36a8a8;
+  --color-hover-text: #1A1A1A;
+
+  /* Footer bar: a teal band in both themes, so it reads as a base rail. */
+  --color-bar-bg: #36a8a8;     /* #1a1a1a on it = 6.1:1 */
+  --color-bar-text: #1a1a1a;
+
+  /* Banner band, from the sibling copy-cat site. */
+  --banner-from: #217582;
+  --banner-to: #185861;        /* white on it = 9.9:1 */
+  --on-banner: #ffffff;
+
+  --radius-sm: 4px;            /* inputs, chips */
+  --radius: 12px;              /* cards, buttons */
+  --radius-lg: 24px;           /* modals, containers */
+  --radius-full: 9999px;       /* pills, avatars */
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* theme.js sets data-theme on <html>, defaulting to the OS preference. */
+:root[data-theme="dark"] {
+  --color-bg: #1A1714;
+  --color-surface: #242019;
+  --color-border: #3A332A;
+  --color-text: #F5EFE6;
+  --color-text-muted: #A79E92;
+
+  /* On the dark background the Primary cyan clears 12:1, so links can use
+     it directly rather than the deepened light-mode teal. */
+  --color-link: #50ebec;
+
+  --color-bar-bg: #234242;     /* light text on it = 9.4:1 */
+  --color-bar-text: #e6e3dc;
+  --banner-from: #2b5050;      /* light text on it = 7.6:1 */
+  --banner-to: #1a3333;
+  --on-banner: #f2f2ec;
+
+  /* Same geometry at higher opacity: a shadow tuned for white vanishes here. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+/* The `hidden` attribute must always win. Any rule setting `display` on an
+   element (grid, flex…) otherwise silently overrides it. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* The nav's light/dark switch. */
+.theme-toggle {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* The gradient band carrying each page's H1. Each tool sets its own bottom margin. */
+.tool-banner {
+  background: linear-gradient(135deg, var(--banner-from), var(--banner-to));
+  color: var(--on-banner);
+}
+
 .theme-toggle:hover {
   background: var(--color-hover);
   border-color: var(--color-hover);

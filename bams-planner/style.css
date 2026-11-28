@@ -5,14 +5,7 @@
    ========================================================================== */
 
 :root {
-  --color-primary: #50ebec;
   --color-primary-hover: #185f9c;
-
-  --color-bg: #FFF8F0;
-  --color-surface: #FFFFFF;
-  --color-border: #E0D5C7;
-  --color-text: #1A1A1A;
-  --color-text-muted: #6B6B6B;
 
   --color-ge: #1e73be;
   --color-common: #7c3aed;
@@ -31,30 +24,9 @@
   --color-completed: #065f46;
   --color-completed-bg: #d1fae5;
 
-  --color-on-primary: #1A1A1A;
   /* Form fields sit slightly inset against the white surface in light mode,
      and slightly raised against the dark surface in dark mode. */
   --color-input-bg: #FFFFFF;
-
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  /* Footer bar: a dark block in both themes, so it reads as a base rail. */
-  --banner-from: #217582;    /* secondary */
-  --banner-to: #185861;      /* deeper secondary; white on it = 9.9:1 */
-  --on-banner: #ffffff;      /* 5.3:1 at the gradient's lightest end */
-  /* Button hover, taken from the footer band. One value for both themes:
-     it carries on the cream and on the dark background alike. Always a
-     fill with a near-black label (6.07:1) — as hover *text* on the cream
-     this teal is only 2.72:1 and fails AA. */
-  --color-hover: #36a8a8;
-  --color-hover-text: #1A1A1A;
-  --color-bar-bg: #36a8a8;   /* teal band; #1a1a1a on it = 6.1:1 */
-  --color-bar-text: #1a1a1a;
-  /* Secondary, deepened until it passes AA as body-sized link text on the
-     cream background: the palette's own accents top out at 2.7:1 there. */
-  --color-link: #1D6B77;
-  --radius-sm: 4px;      /* inputs, chips */
 }
 
 /* ---------- Dark theme ----------
@@ -62,14 +34,7 @@
    Category hues are brightened so the coloured left borders stay readable
    against the dark surface. Print output stays light — see @media print. */
 :root[data-theme="dark"] {
-  --color-primary: #50ebec;
   --color-primary-hover: #7bb8f5;
-
-  --color-bg: #1A1714;
-  --color-surface: #242019;
-  --color-border: #3A332A;
-  --color-text: #F5EFE6;
-  --color-text-muted: #A79E92;
 
   --color-ge: #60a5fa;
   --color-common: #a78bfa;
@@ -85,35 +50,7 @@
   --color-completed: #34d399;
   --color-completed-bg: #123328;
 
-  --color-on-primary: #1A1A1A;
   --color-input-bg: #1A1714;
-
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --banner-from: #2b5050;    /* muted teal; light text on it = 7.6:1 */
-  --banner-to: #1a3333;
-  --on-banner: #f2f2ec;
-  /* Button hover, taken from the footer band. One value for both themes:
-     it carries on the cream and on the dark background alike. Always a
-     fill with a near-black label (6.07:1) — as hover *text* on the cream
-     this teal is only 2.72:1 and fails AA. */
-  --color-hover: #36a8a8;
-  --color-hover-text: #1A1A1A;
-  --color-bar-bg: #234242;   /* muted teal; light text on it = 9.4:1 */
-  --color-bar-text: #e6e3dc;
-  /* On the dark background the Primary cyan clears 12:1, so links can use
-     it directly rather than the deepened light-mode teal. */
-  --color-link: #50ebec;
-}
-
-/* The `hidden` attribute must always win over any rule that sets `display`. */
-[hidden] { display: none !important; }
-
-body {
-  margin: 0;
-  font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--color-bg);
-  color: var(--color-text);
-  line-height: 1.5;
 }
 
 main {
@@ -150,19 +87,6 @@ main {
 }
 
 .home-link:hover { color: var(--color-link); }
-
-.theme-toggle {
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  line-height: 1;
-  cursor: pointer;
-}
 
 .header-actions { display: flex; gap: 8px; margin-left: auto; }
 
@@ -640,15 +564,12 @@ main {
 
 /* ---------- Shared version / copyright bar ---------- */
 
-
 /* ---------- Tool banner ----------
    Names the tool, in the same shape as the banner on copy-cat: a gradient
    band carrying the page's H1 and a one-line description. The H1 lives here
    rather than in the header bar, so the page has one obvious title. */
 
 .tool-banner {
-  background: linear-gradient(135deg, var(--banner-from), var(--banner-to));
-  color: var(--on-banner);
   /* The tools below start flush against their containers, so the breathing
      room between the banner and the first control has to come from here. */
   margin-bottom: 28px;

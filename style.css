@@ -4,74 +4,15 @@
    ========================================================================== */
 
 :root {
-  --color-primary: #50ebec;
-  --color-accent: #30A8B9;
-
   /* Call-to-action button: the palette's Primary, the same in both themes
      since it carries on the cream and on the dark background alike. Its
      label is Text Primary, never white — white on this cyan is 1.45:1,
      which fails AA outright, while #1A1A1A reaches 11.96:1. */
   --color-cta: var(--color-primary);
   --color-cta-text: #1A1A1A;
-  --color-bg: #FFF8F0;
-  --color-surface: #FFFFFF;
-  --color-border: #E0D5C7;
-  --color-text: #1A1A1A;
-  --color-text-muted: #6B6B6B;
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  /* Footer bar: a dark block in both themes, so it reads as a base rail. */
-  --banner-from: #217582;    /* secondary */
-  --banner-to: #185861;      /* deeper secondary; white on it = 9.9:1 */
-  --on-banner: #ffffff;      /* 5.3:1 at the gradient's lightest end */
-  /* Button hover, taken from the footer band. One value for both themes:
-     it carries on the cream and on the dark background alike. Always a
-     fill with a near-black label (6.07:1) — as hover *text* on the cream
-     this teal is only 2.72:1 and fails AA. */
-  --color-hover: #36a8a8;
-  --color-hover-text: #1A1A1A;
-  --color-bar-bg: #36a8a8;   /* teal band; #1a1a1a on it = 6.1:1 */
-  --color-bar-text: #1a1a1a;
-  /* Secondary, deepened until it passes AA as body-sized link text on the
-     cream background: the palette's own accents top out at 2.7:1 there. */
-  --color-link: #1D6B77;
-  --radius-sm: 4px;      /* inputs, chips */
-}
-
-/* ---------- Dark theme ----------
-   theme.js sets data-theme on <html>, defaulting to the OS preference. */
-:root[data-theme="dark"] {
-  --color-primary: #50ebec;
-  --color-accent: #30A8B9;
-  --color-bg: #1A1714;
-  --color-surface: #242019;
-  --color-border: #3A332A;
-  --color-text: #F5EFE6;
-  --color-text-muted: #A79E92;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --banner-from: #2b5050;    /* muted teal; light text on it = 7.6:1 */
-  --banner-to: #1a3333;
-  --on-banner: #f2f2ec;
-  /* Button hover, taken from the footer band. One value for both themes:
-     it carries on the cream and on the dark background alike. Always a
-     fill with a near-black label (6.07:1) — as hover *text* on the cream
-     this teal is only 2.72:1 and fails AA. */
-  --color-hover: #36a8a8;
-  --color-hover-text: #1A1A1A;
-  --color-bar-bg: #234242;   /* muted teal; light text on it = 9.4:1 */
-  --color-bar-text: #e6e3dc;
-  /* On the dark background the Primary cyan clears 12:1, so links can use
-     it directly rather than the deepened light-mode teal. */
-  --color-link: #50ebec;
 }
 
 body {
-  margin: 0;
-  font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--color-bg);
-  color: var(--color-text);
-  line-height: 1.5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -164,7 +105,6 @@ main {
   border: 0.5px solid var(--color-border);
 }
 
-
 /* Two up on desktop rather than auto-fit: with four tools that gives a square
    2x2 block, where auto-fit was fitting three across and orphaning the last. */
 .tool-grid {
@@ -222,19 +162,6 @@ main {
   /* vw-capped rather than fixed: it has the full column to itself here, and
      60vw keeps it in proportion from a 320px phone up to the breakpoint. */
   .home-hero-mark { width: min(220px, 60vw); height: auto; }
-}
-
-.theme-toggle {
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-  line-height: 1;
-  cursor: pointer;
 }
 
 /* ---------- License page ---------- */
@@ -321,15 +248,3 @@ main {
 
 .prose .prose-cta:hover { background: var(--color-hover); color: var(--color-hover-text); }
 
-/* ---------- Page banner ----------
-   The same band the tools use, for the pages that are not tools. Lives here
-   because index, license and the guide all load this stylesheet. */
-
-.tool-banner {
-  background: linear-gradient(135deg, var(--banner-from), var(--banner-to));
-  color: var(--on-banner);
-  /* No bottom margin here, unlike the tools': the pages using this sheet
-     (home, licence, guide) all give their own <main> generous top padding,
-     and a margin on top of that left the space above the content 28px
-     larger than the space below it. */
-}

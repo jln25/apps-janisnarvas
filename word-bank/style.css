@@ -6,85 +6,11 @@
    stay compact rather than taking the 48px button height.
    ========================================================================== */
 
-:root {
-  --color-primary: #50ebec;
-  --color-tertiary: #F09B48;
-  --color-bg: #FFF8F0;
-  --color-surface: #FFFFFF;
-  --color-border: #E0D5C7;
-  --color-text: #1A1A1A;
-  --color-text-muted: #6B6B6B;
-  --color-on-primary: #1A1A1A;
-  --color-link: #1D6B77;
-
-  /* Button hover, taken from the footer band, always with a near-black label. */
-  --color-hover: #36a8a8;
-  --color-hover-text: #1A1A1A;
-  --color-bar-bg: #36a8a8;
-  --color-bar-text: #1a1a1a;
-  --banner-from: #217582;
-  --banner-to: #185861;
-  --on-banner: #ffffff;
-
-  --radius-sm: 4px;
-  --radius: 12px;
-  --radius-lg: 24px;
-  --radius-full: 9999px;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-:root[data-theme="dark"] {
-  --color-bg: #1A1714;
-  --color-surface: #242019;
-  --color-border: #3A332A;
-  --color-text: #F5EFE6;
-  --color-text-muted: #A79E92;
-  --color-link: #50ebec;
-
-  --color-bar-bg: #234242;
-  --color-bar-text: #e6e3dc;
-  --banner-from: #2b5050;
-  --banner-to: #1a3333;
-  --on-banner: #f2f2ec;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.55);
-}
-
-/* The `hidden` attribute must always win over any display rule. */
-[hidden] { display: none !important; }
-
-body {
-  margin: 0;
-  font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  background: var(--color-bg);
-  color: var(--color-text);
-  line-height: 1.5;
-}
-
-/* The nav's theme switch. shared.css carries only its hover state. */
-.theme-toggle {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text-muted);
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-}
+body { font-size: 16px; }
 
 /* ---------- Banner ---------- */
 
 .tool-banner {
-  background: linear-gradient(135deg, var(--banner-from), var(--banner-to));
-  color: var(--on-banner);
   margin-bottom: 32px;
 }
 

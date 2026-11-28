@@ -106,8 +106,11 @@ One H1 per page, and it lives in the banner.
   `prefers-color-scheme` directly.
 - **Shared furniture is rendered once.** `nav.js` and `sitebar.js` build the
   nav and footer on all six pages; neither is pasted into markup.
-- **Four stylesheets carry their own copy** of the shared rules, because each
-  app page loads only its own. A change to shared furniture goes in all four.
+- **Shared styles live once, in `shared.css`.** The palette (light and dark),
+  `body`, `[hidden]`, the theme switch and the banner band are defined there,
+  and every page loads it before its own sheet. A page's sheet adds only what
+  is its own (status or category colours, its banner margin), so a palette
+  change is one edit.
 - **Category colours in the planner are not UI chrome.** They encode a data
   dimension and sit outside this palette on purpose.
 - **Bump `?v=` on every CSS or JS change.** The host serves stylesheets and
